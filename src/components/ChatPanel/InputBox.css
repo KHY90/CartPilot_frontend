@@ -1,0 +1,50 @@
+/* InputBox 스타일 */
+
+.input-box {
+  display: flex;
+  gap: 8px;
+}
+
+.input-box input {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-box input:focus {
+  border-color: #667eea;
+}
+
+.input-box input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.input-box button {
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.input-box button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.input-box button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.input-box button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

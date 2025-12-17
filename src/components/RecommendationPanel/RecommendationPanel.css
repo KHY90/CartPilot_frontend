@@ -1,0 +1,161 @@
+/* RecommendationPanel 스타일 */
+
+.recommendation-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+}
+
+/* 패널 헤더 */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.intent-badge {
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: #667eea;
+  color: white;
+  border-radius: 16px;
+}
+
+.processing-time {
+  font-size: 12px;
+  color: #888;
+}
+
+/* 빈 상태 */
+.recommendation-panel.empty,
+.recommendation-panel.loading,
+.recommendation-panel.error,
+.recommendation-panel.clarification,
+.recommendation-panel.pending {
+  justify-content: center;
+  align-items: center;
+}
+
+.empty-state,
+.error-state,
+.clarification-state,
+.pending-state {
+  text-align: center;
+  color: #666;
+}
+
+.empty-icon,
+.error-icon,
+.clarification-icon,
+.pending-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.empty-state p,
+.error-state p,
+.clarification-state p,
+.pending-state p {
+  margin: 4px 0;
+  font-size: 16px;
+}
+
+/* 에러 상태 */
+.error-state .suggestions {
+  margin-top: 16px;
+  text-align: left;
+  background-color: #fff3e0;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.error-state .suggestions ul {
+  margin: 8px 0 0 0;
+  padding-left: 20px;
+}
+
+/* 추가 질문 상태 */
+.clarification-question {
+  font-weight: 600;
+  color: #333;
+  margin-top: 12px;
+}
+
+/* 추천 결과 */
+.rec-summary {
+  background-color: white;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.rec-summary p {
+  margin: 0;
+}
+
+.budget-info {
+  margin-top: 8px !important;
+  color: #667eea;
+  font-weight: 500;
+}
+
+/* 카드 그리드 */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* GIFT 모드 그리드 */
+.gift-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* GIFT 요약 헤더 */
+.summary-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gift-icon {
+  font-size: 32px;
+}
+
+.recipient {
+  margin: 0;
+  font-size: 16px;
+}
+
+.occasion {
+  color: #888;
+}
+
+.rec-count {
+  margin: 12px 0 0 0;
+  font-size: 14px;
+  color: #667eea;
+}
+
+/* 일반 추천 */
+.generic-recommendations {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+/* 준비 중 */
+.intent-info {
+  margin-top: 12px;
+  color: #888;
+  font-size: 14px;
+}

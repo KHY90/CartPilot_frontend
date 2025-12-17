@@ -1,0 +1,44 @@
+/* MessageBubble 스타일 */
+
+.message-bubble {
+  max-width: 80%;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  word-wrap: break-word;
+}
+
+/* 사용자 메시지 */
+.message-bubble.user {
+  margin-left: auto;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+/* 어시스턴트 메시지 */
+.message-bubble.assistant {
+  margin-right: auto;
+  background-color: #f0f0f0;
+  color: #333;
+  border-bottom-left-radius: 4px;
+}
+
+.message-content {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.message-time {
+  font-size: 10px;
+  margin-top: 4px;
+  opacity: 0.7;
+}
+
+.message-bubble.user .message-time {
+  text-align: right;
+}
+
+.message-bubble.assistant .message-time {
+  text-align: left;
+}
