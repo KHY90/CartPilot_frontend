@@ -1,37 +1,43 @@
-/* RecommendationPanel 스타일 */
+/* RecommendationPanel Styles */
 
 .recommendation-panel {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 20px;
+  padding: 24px;
 }
 
-/* 패널 헤더 */
+/* Panel Header */
 .panel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .intent-badge {
-  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
   font-size: 14px;
   font-weight: 600;
-  background-color: #667eea;
+  background-color: var(--color-primary);
   color: white;
-  border-radius: 16px;
+  border-radius: var(--radius-full);
 }
 
 .processing-time {
   font-size: 12px;
-  color: #888;
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-secondary);
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
 }
 
-/* 빈 상태 */
+/* Empty/Loading/Error States */
 .recommendation-panel.empty,
 .recommendation-panel.loading,
 .recommendation-panel.error,
@@ -46,16 +52,30 @@
 .clarification-state,
 .pending-state {
   text-align: center;
-  color: #666;
+  max-width: 320px;
 }
 
 .empty-icon,
 .error-icon,
 .clarification-icon,
 .pending-icon {
-  font-size: 48px;
-  display: block;
-  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background-color: var(--color-bg-secondary);
+  border-radius: 50%;
+}
+
+.empty-icon svg,
+.error-icon svg,
+.clarification-icon svg,
+.pending-icon svg {
+  width: 36px;
+  height: 36px;
+  color: var(--color-text-muted);
 }
 
 .empty-state p,
@@ -63,37 +83,67 @@
 .clarification-state p,
 .pending-state p {
   margin: 4px 0;
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.empty-state p:first-of-type,
+.error-state p:first-of-type,
+.clarification-state p:first-of-type,
+.pending-state p:first-of-type {
+  font-weight: 600;
+  color: var(--color-text);
   font-size: 16px;
 }
 
-/* 에러 상태 */
+/* Error State Suggestions */
 .error-state .suggestions {
-  margin-top: 16px;
+  margin-top: 20px;
   text-align: left;
-  background-color: #fff3e0;
-  padding: 12px;
-  border-radius: 8px;
+  background-color: var(--color-warning-light);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(217, 119, 6, 0.2);
+}
+
+.error-state .suggestions p {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-warning);
+  margin-bottom: 8px;
 }
 
 .error-state .suggestions ul {
-  margin: 8px 0 0 0;
-  padding-left: 20px;
+  margin: 0;
+  padding-left: 18px;
 }
 
-/* 추가 질문 상태 */
+.error-state .suggestions li {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 4px 0;
+}
+
+/* Clarification Question */
 .clarification-question {
   font-weight: 600;
-  color: #333;
-  margin-top: 12px;
+  color: var(--color-text);
+  margin-top: 16px;
+  padding: 16px;
+  background-color: var(--color-primary-light);
+  border-radius: var(--radius-md);
+  font-size: 15px;
 }
 
-/* 추천 결과 */
+/* Recommendation Summary */
 .rec-summary {
-  background-color: white;
-  padding: 16px;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-surface);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
 }
 
 .rec-summary p {
@@ -101,61 +151,96 @@
 }
 
 .budget-info {
-  margin-top: 8px !important;
-  color: #667eea;
-  font-weight: 500;
+  margin-top: 10px !important;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 14px;
 }
 
-/* 카드 그리드 */
+/* Cards Grid */
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-}
-
-/* GIFT 모드 그리드 */
-.gift-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
 
-/* GIFT 요약 헤더 */
+/* GIFT Mode Grid */
+.gift-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+/* GIFT Summary Header */
 .summary-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .gift-icon {
-  font-size: 32px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-accent-light);
+  border-radius: var(--radius-md);
+  font-size: 24px;
 }
 
 .recipient {
   margin: 0;
   font-size: 16px;
+  color: var(--color-text);
+}
+
+.recipient strong {
+  font-weight: 600;
 }
 
 .occasion {
-  color: #888;
+  color: var(--color-text-muted);
+  font-weight: 400;
 }
 
 .rec-count {
-  margin: 12px 0 0 0;
+  margin: 16px 0 0 0;
   font-size: 14px;
-  color: #667eea;
+  color: var(--color-text-secondary);
 }
 
-/* 일반 추천 */
+.rec-count strong {
+  color: var(--color-primary);
+}
+
+/* Generic Recommendations */
 .generic-recommendations {
   text-align: center;
-  padding: 40px;
-  color: #666;
+  padding: 48px;
+  color: var(--color-text-secondary);
 }
 
-/* 준비 중 */
+/* Pending State */
 .intent-info {
-  margin-top: 12px;
-  color: #888;
+  margin-top: 16px;
+  color: var(--color-text-muted);
   font-size: 14px;
+}
+
+.intent-info strong {
+  color: var(--color-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .recommendation-panel {
+    padding: 16px;
+  }
+
+  .gift-cards-grid,
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }

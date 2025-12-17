@@ -1,0 +1,236 @@
+/* SearchProgress Styles */
+
+.search-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  min-height: 400px;
+}
+
+.search-progress-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  max-width: 360px;
+}
+
+/* Main Animation */
+.search-animation {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-pulse-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid var(--color-primary);
+  opacity: 0;
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+.search-pulse-ring::before,
+.search-pulse-ring::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid var(--color-primary);
+  opacity: 0;
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+.search-pulse-ring::before {
+  animation-delay: 0.5s;
+}
+
+.search-pulse-ring::after {
+  animation-delay: 1s;
+}
+
+@keyframes pulse-ring {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+.search-icon-container {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-primary-light);
+  border-radius: 50%;
+  animation: icon-bounce 2s ease-in-out infinite;
+}
+
+.search-icon {
+  color: var(--color-primary);
+}
+
+@keyframes icon-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Current Status */
+.search-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-md);
+}
+
+.search-status-icon {
+  font-size: 20px;
+  animation: status-icon-pop 0.3s ease-out;
+}
+
+@keyframes status-icon-pop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.search-status-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text);
+  min-width: 140px;
+}
+
+/* Progress Steps */
+.search-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.search-step {
+  display: flex;
+  align-items: center;
+}
+
+.search-step-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+}
+
+.search-step.active .search-step-dot {
+  background-color: var(--color-primary);
+  box-shadow: 0 0 0 4px var(--color-primary-light);
+  animation: step-pulse 1s ease-in-out infinite;
+}
+
+.search-step.completed .search-step-dot {
+  background-color: var(--color-success);
+}
+
+.search-step.completed .search-step-dot svg {
+  color: white;
+}
+
+@keyframes step-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 4px var(--color-primary-light);
+  }
+  50% {
+    box-shadow: 0 0 0 8px var(--color-primary-light);
+  }
+}
+
+.search-step-line {
+  width: 32px;
+  height: 2px;
+  background-color: var(--color-border);
+  transition: background-color var(--transition);
+}
+
+.search-step-line.completed {
+  background-color: var(--color-success);
+}
+
+/* Fun Fact */
+.search-fun-fact {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px 20px;
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  max-width: 100%;
+}
+
+.fun-fact-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.fun-fact-text {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  animation: fact-fade 0.5s ease-out;
+}
+
+@keyframes fact-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .search-progress {
+    padding: 32px 16px;
+    min-height: 300px;
+  }
+
+  .search-progress-content {
+    gap: 24px;
+  }
+
+  .search-step-line {
+    width: 20px;
+  }
+}

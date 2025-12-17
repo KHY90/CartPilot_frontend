@@ -1,35 +1,56 @@
-/* CartPilot 메인 스타일 */
+/* CartPilot Main Layout */
 
 .app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: var(--color-bg);
 }
 
-/* 헤더 */
+/* Header */
 .app-header {
   display: flex;
   align-items: center;
+  gap: 16px;
+  padding: 16px 32px;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.app-logo {
+  display: flex;
+  align-items: center;
   gap: 12px;
-  padding: 16px 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.app-logo-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-primary);
   color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 20px;
+  border-radius: var(--radius-md);
 }
 
 .app-header h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
 }
 
 .app-subtitle {
   font-size: 14px;
-  opacity: 0.9;
+  color: var(--color-text-muted);
+  padding-left: 16px;
+  border-left: 1px solid var(--color-border);
 }
 
-/* 메인 컨텐츠 */
+/* Main Content */
 .app-main {
   display: flex;
   flex: 1;
@@ -38,35 +59,46 @@
 }
 
 .chat-section {
-  flex: 0 0 400px;
+  flex: 0 0 420px;
   display: flex;
   flex-direction: column;
-  background-color: white;
-  border-right: 1px solid #e0e0e0;
+  background-color: var(--color-surface);
+  border-right: 1px solid var(--color-border);
 }
 
 .recommendation-section {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: #fafafa;
+  background-color: var(--color-bg);
   overflow-y: auto;
 }
 
-/* 푸터 */
+/* Footer */
 .app-footer {
-  padding: 12px 24px;
-  background-color: #333;
-  color: #aaa;
+  padding: 14px 32px;
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
   text-align: center;
-  font-size: 12px;
 }
 
 .app-footer p {
   margin: 0;
+  font-size: 12px;
+  color: var(--color-text-muted);
 }
 
-/* 반응형 */
+/* Responsive */
+@media (max-width: 1024px) {
+  .chat-section {
+    flex: 0 0 360px;
+  }
+
+  .app-header {
+    padding: 14px 20px;
+  }
+}
+
 @media (max-width: 768px) {
   .app-main {
     flex-direction: column;
@@ -75,10 +107,22 @@
   .chat-section {
     flex: 0 0 50%;
     border-right: none;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .recommendation-section {
     flex: 1;
+  }
+
+  .app-header {
+    padding: 12px 16px;
+  }
+
+  .app-subtitle {
+    display: none;
+  }
+
+  .app-header h1 {
+    font-size: 18px;
   }
 }
