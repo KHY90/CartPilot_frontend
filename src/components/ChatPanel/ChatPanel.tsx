@@ -2,7 +2,7 @@
  * ChatPanel 컴포넌트
  * 좌측 채팅 영역
  */
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { ConversationMessage } from '../../types';
 import MessageBubble from './MessageBubble';
 import InputBox from './InputBox';
@@ -27,6 +27,16 @@ function ChatPanel({
   onClearError,
 }: ChatPanelProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [inputValue, setInputValue] = useState('');
+
+  const handleExampleClick = (example: string) => {
+    setInputValue(example);
+  };
+
+  const handleSendMessage = (message: string) => {
+    onSendMessage(message);
+    setInputValue('');
+  };
 
   // 새 메시지 시 스크롤
   useEffect(() => {
@@ -54,11 +64,11 @@ function ChatPanel({
             <div className="chat-examples">
               <p className="examples-title">이렇게 물어보세요</p>
               <ul>
-                <li>30대 남자 동료 퇴사 선물 5만원</li>
-                <li>가성비 무선 키보드 추천해줘</li>
-                <li>노트북+마우스+키보드 100만원에 맞춰줘</li>
-                <li>에어프라이어 사도 돼?</li>
-                <li>요즘 뭐 사?</li>
+                <li onClick={() => handleExampleClick('30대 남자 동료 퇴사 선물 5만원')}>30대 남자 동료 퇴사 선물 5만원</li>
+                <li onClick={() => handleExampleClick('가성비 무선 키보드 추천해줘')}>가성비 무선 키보드 추천해줘</li>
+                <li onClick={() => handleExampleClick('노트북+마우스+키보드 100만원에 맞춰줘')}>노트북+마우스+키보드 100만원에 맞춰줘</li>
+                <li onClick={() => handleExampleClick('에어프라이어 사도 돼?')}>에어프라이어 사도 돼?</li>
+                <li onClick={() => handleExampleClick('요즘 뭐 사?')}>요즘 뭐 사?</li>
               </ul>
             </div>
           </div>
@@ -84,7 +94,12 @@ function ChatPanel({
       </div>
 
       <div className="chat-panel-input">
-        <InputBox onSend={onSendMessage} disabled={isLoading} />
+        <InputBox
+          onSend={handleSendMessage}
+          disabled={isLoading}
+          value={inputValue}
+          onChange={setInputValue}
+        />
       </div>
     </div>
   );

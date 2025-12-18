@@ -8,10 +8,16 @@ import './InputBox.css';
 interface InputBoxProps {
   onSend: (message: string) => void;
   disabled?: boolean;
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
-function InputBox({ onSend, disabled = false }: InputBoxProps) {
-  const [input, setInput] = useState('');
+function InputBox({ onSend, disabled = false, value, onChange }: InputBoxProps) {
+  const [internalInput, setInternalInput] = useState('');
+
+  // 외부에서 value가 제공되면 controlled, 아니면 uncontrolled
+  const input = value !== undefined ? value : internalInput;
+  const setInput = onChange || setInternalInput;
 
   const handleSend = () => {
     const trimmed = input.trim();
