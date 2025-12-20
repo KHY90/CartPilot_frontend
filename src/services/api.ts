@@ -6,7 +6,7 @@ import axios, { AxiosInstance, AxiosError } from 'axios';
 import { ChatRequest, ChatResponse, HealthResponse, ConversationMessage } from '../types';
 
 // API 기본 URL
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 // Axios 인스턴스 생성
 const apiClient: AxiosInstance = axios.create({
