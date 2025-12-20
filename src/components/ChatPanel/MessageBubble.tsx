@@ -2,7 +2,6 @@
  * MessageBubble 컴포넌트
  * 개별 메시지 버블
  */
-import React from 'react';
 import { ConversationMessage } from '../../types';
 import './MessageBubble.css';
 

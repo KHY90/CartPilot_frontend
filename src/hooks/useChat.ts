@@ -3,7 +3,7 @@
  * 채팅 상태 관리 및 API 호출
  */
 import { useState, useCallback } from 'react';
-import { ChatState, ChatResponse, ConversationMessage } from '../types';
+import { ChatState, ConversationMessage } from '../types';
 import { sendChatMessage } from '../services/api';
 
 const initialState: ChatState = {

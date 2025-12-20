@@ -2,7 +2,6 @@
  * CartPilot 메인 앱
  * 좌측 채팅 + 우측 추천 카드 레이아웃
  */
-import React from 'react';
 import ChatPanel from './components/ChatPanel/ChatPanel';
 import RecommendationPanel from './components/RecommendationPanel/RecommendationPanel';
 import useChat from './hooks/useChat';

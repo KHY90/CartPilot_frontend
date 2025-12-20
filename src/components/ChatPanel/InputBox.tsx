@@ -2,7 +2,7 @@
  * InputBox 컴포넌트
  * 메시지 입력 필드
  */
-import React, { useState, KeyboardEvent } from 'react';
+import { useState, KeyboardEvent } from 'react';
 import './InputBox.css';
 
 interface InputBoxProps {

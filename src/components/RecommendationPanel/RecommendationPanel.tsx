@@ -2,7 +2,6 @@
  * RecommendationPanel 컴포넌트
  * 우측 추천 카드 영역
  */
-import React from 'react';
 import {
   ChatResponse,
   GiftRecommendation,
@@ -14,7 +13,6 @@ import {
   IntentType
 } from '../../types';
 import GiftCard from './GiftCard';
-import ProductCard from './ProductCard';
 import SearchProgress from '../common/SearchProgress';
 import './RecommendationPanel.css';
 

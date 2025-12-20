@@ -2,7 +2,7 @@
  * SearchProgress Component
  * Enhanced loading experience with animated search steps
  */
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './SearchProgress.css';
 
 interface SearchStep {

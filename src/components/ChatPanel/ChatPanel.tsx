@@ -2,7 +2,7 @@
  * ChatPanel 컴포넌트
  * 좌측 채팅 영역
  */
-import React, { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { ConversationMessage } from '../../types';
 import MessageBubble from './MessageBubble';
 import InputBox from './InputBox';

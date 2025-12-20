@@ -2,7 +2,6 @@
  * ErrorMessage 컴포넌트
  * 에러 메시지 표시
  */
-import React from 'react';
 import './ErrorMessage.css';
 
 interface ErrorMessageProps {

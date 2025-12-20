@@ -2,7 +2,6 @@
  * Loading 컴포넌트
  * 로딩 상태 표시
  */
-import React from 'react';
 import './Loading.css';
 
 interface LoadingProps {

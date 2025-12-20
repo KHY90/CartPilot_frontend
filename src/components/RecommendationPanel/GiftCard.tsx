@@ -2,7 +2,6 @@
  * GiftCard 컴포넌트
  * GIFT 모드 전용 상품 카드
  */
-import React from 'react';
 import { RecommendationCard } from '../../types';
 import './GiftCard.css';
 

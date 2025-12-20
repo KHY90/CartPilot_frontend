@@ -2,7 +2,6 @@
  * ProductCard 컴포넌트
  * 상품 추천 카드
  */
-import React from 'react';
 import { RecommendationCard } from '../../types';
 import './ProductCard.css';
 
