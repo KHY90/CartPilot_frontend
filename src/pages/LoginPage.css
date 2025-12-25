@@ -1,0 +1,131 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.login-container {
+  background: white;
+  border-radius: 16px;
+  padding: 48px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.login-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.login-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 8px 0;
+}
+
+.login-subtitle {
+  color: #666;
+  font-size: 15px;
+  margin: 0;
+}
+
+.login-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.login-button.kakao {
+  background: #fee500;
+  color: #000000;
+}
+
+.login-button.kakao:hover {
+  background: #fdd800;
+}
+
+.login-button.naver {
+  background: #03c75a;
+  color: #ffffff;
+}
+
+.login-button.naver:hover {
+  background: #02b350;
+}
+
+.login-features {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.login-features h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+.login-features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-features li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #444;
+}
+
+.feature-icon {
+  font-size: 18px;
+}
+
+.login-loading {
+  color: white;
+  font-size: 18px;
+}
