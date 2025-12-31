@@ -1,14 +1,14 @@
 /**
  * 인증 API 서비스
+ * Refresh Token은 HTTP-only 쿠키로 관리됨
  */
 import apiClient from './api';
 import { User, TokenResponse } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-// 토큰 저장 키
+// 토큰 저장 키 (Access Token만 localStorage에 저장)
 const ACCESS_TOKEN_KEY = 'cartpilot_access_token';
-const REFRESH_TOKEN_KEY = 'cartpilot_refresh_token';
 
 /**
  * 액세스 토큰 저장
@@ -25,33 +25,17 @@ export function getAccessToken(): string | null {
 }
 
 /**
- * 리프레시 토큰 저장
- */
-export function setRefreshToken(token: string): void {
-  localStorage.setItem(REFRESH_TOKEN_KEY, token);
-}
-
-/**
- * 리프레시 토큰 조회
- */
-export function getRefreshToken(): string | null {
-  return localStorage.getItem(REFRESH_TOKEN_KEY);
-}
-
-/**
- * 토큰 삭제
+ * 토큰 삭제 (Access Token만 - Refresh Token은 서버에서 쿠키 삭제)
  */
 export function clearTokens(): void {
   localStorage.removeItem(ACCESS_TOKEN_KEY);
-  localStorage.removeItem(REFRESH_TOKEN_KEY);
 }
 
 /**
- * 토큰 저장 (access + refresh)
+ * 토큰 저장 (Access Token만 저장, Refresh Token은 쿠키로 자동 관리)
  */
-export function saveTokens(accessToken: string, refreshToken: string): void {
+export function saveTokens(accessToken: string): void {
   setAccessToken(accessToken);
-  setRefreshToken(refreshToken);
 }
 
 /**
@@ -86,43 +70,27 @@ export async function getCurrentUser(): Promise<User> {
 }
 
 /**
- * 토큰 갱신
+ * 토큰 갱신 (Refresh Token은 쿠키로 자동 전송됨)
  */
 export async function refreshAccessToken(): Promise<TokenResponse> {
-  const refreshToken = getRefreshToken();
-  if (!refreshToken) {
-    throw new Error('리프레시 토큰이 없습니다');
-  }
+  // withCredentials: true로 설정되어 있으므로 쿠키가 자동 전송됨
+  const response = await apiClient.post<TokenResponse>('/api/auth/refresh');
 
-  const response = await apiClient.post<TokenResponse>('/api/auth/refresh', {
-    refresh_token: refreshToken,
-  });
-
-  const { access_token, refresh_token } = response.data;
-  saveTokens(access_token, refresh_token);
+  const { access_token } = response.data;
+  setAccessToken(access_token);
 
   return response.data;
 }
 
 /**
- * 로그아웃
+ * 로그아웃 (서버에서 쿠키 삭제)
  */
 export async function logout(): Promise<void> {
-  const token = getAccessToken();
-  if (token) {
-    try {
-      await apiClient.post(
-        '/api/auth/logout',
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-    } catch {
-      // 로그아웃 API 실패해도 토큰은 삭제
-    }
+  try {
+    // 서버에서 refresh_token 쿠키를 삭제함
+    await apiClient.post('/api/auth/logout');
+  } catch {
+    // 로그아웃 API 실패해도 로컬 토큰은 삭제
   }
   clearTokens();
 }
@@ -130,7 +98,7 @@ export async function logout(): Promise<void> {
 /**
  * API 요청에 인증 헤더 추가
  */
-export function getAuthHeaders(): { Authorization: string } | {} {
+export function getAuthHeaders(): { Authorization: string } | Record<string, never> {
   const token = getAccessToken();
   if (token) {
     return { Authorization: `Bearer ${token}` };

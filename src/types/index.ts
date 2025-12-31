@@ -181,10 +181,9 @@ export interface User {
   created_at?: string;
 }
 
-// 토큰 응답
+// 토큰 응답 (refresh_token은 HTTP-only 쿠키로 전송됨)
 export interface TokenResponse {
   access_token: string;
-  refresh_token: string;
   token_type: string;
   expires_in: number;
 }

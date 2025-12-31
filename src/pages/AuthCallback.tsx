@@ -17,7 +17,6 @@ function AuthCallback() {
   useEffect(() => {
     const handleCallback = async () => {
       const accessToken = searchParams.get('access_token');
-      const refreshToken = searchParams.get('refresh_token');
       const errorParam = searchParams.get('error');
 
       if (errorParam) {
@@ -25,9 +24,9 @@ function AuthCallback() {
         return;
       }
 
-      if (accessToken && refreshToken) {
-        // 토큰 저장
-        saveTokens(accessToken, refreshToken);
+      if (accessToken) {
+        // Access Token 저장 (Refresh Token은 HTTP-only 쿠키로 자동 설정됨)
+        saveTokens(accessToken);
 
         // 사용자 정보 새로고침
         await refreshUser();
