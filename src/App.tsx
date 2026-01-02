@@ -9,6 +9,7 @@ import Header from './components/Header/Header';
 import LoginPage from './pages/LoginPage';
 import AuthCallback from './pages/AuthCallback';
 import PurchasesPage from './pages/PurchasesPage';
+import WishlistPage from './pages/WishlistPage';
 import useChat from './hooks/useChat';
 import './App.css';
 
@@ -48,6 +49,15 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route
+          path="/wishlist"
+          element={
+            <>
+              <Header />
+              <WishlistPage />
+            </>
+          }
+        />
         <Route
           path="/purchases"
           element={

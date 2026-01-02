@@ -16,7 +16,31 @@ export interface WishlistItem {
   target_price?: number;
   lowest_price_90days?: number;
   notification_enabled: boolean;
+  alert_on_lowest: boolean;
+  alert_on_target: boolean;
+  alert_on_drop_percent?: number;
   created_at: string;
+}
+
+export interface PriceAnalysis {
+  current_price: number;
+  lowest_90days?: number;
+  highest_90days?: number;
+  average_90days?: number;
+  price_change_percent?: number;
+  is_lowest: boolean;
+  recommendation: 'buy' | 'wait' | 'neutral';
+  data_points: number;
+}
+
+export interface PriceCheckResult {
+  previous_price: number;
+  current_price: number;
+  price_changed: boolean;
+  change_amount: number;
+  change_percent: number;
+  is_lowest: boolean;
+  lowest_90days?: number;
 }
 
 export interface WishlistItemCreate {
@@ -69,7 +93,13 @@ export async function removeFromWishlist(itemId: string): Promise<void> {
  */
 export async function updateWishlistItem(
   itemId: string,
-  updates: { target_price?: number; notification_enabled?: boolean }
+  updates: {
+    target_price?: number;
+    notification_enabled?: boolean;
+    alert_on_lowest?: boolean;
+    alert_on_target?: boolean;
+    alert_on_drop_percent?: number;
+  }
 ): Promise<WishlistItem> {
   const response = await apiClient.put<WishlistItem>(`/api/wishlist/${itemId}`, updates, {
     headers: getAuthHeaders(),
@@ -83,6 +113,33 @@ export async function updateWishlistItem(
 export async function getPriceHistory(itemId: string, days = 90): Promise<PriceHistoryItem[]> {
   const response = await apiClient.get<PriceHistoryItem[]>(
     `/api/wishlist/${itemId}/price-history?days=${days}`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
+  return response.data;
+}
+
+/**
+ * 가격 분석 조회
+ */
+export async function getPriceAnalysis(itemId: string): Promise<PriceAnalysis> {
+  const response = await apiClient.get<PriceAnalysis>(
+    `/api/wishlist/${itemId}/price-analysis`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
+  return response.data;
+}
+
+/**
+ * 수동 가격 체크
+ */
+export async function checkPriceNow(itemId: string): Promise<PriceCheckResult> {
+  const response = await apiClient.post<PriceCheckResult>(
+    `/api/wishlist/${itemId}/check-price`,
+    {},
     {
       headers: getAuthHeaders(),
     }

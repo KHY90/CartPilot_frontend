@@ -44,6 +44,9 @@ function Header() {
         {isAuthenticated ? (
           <div className="user-menu">
             <nav className="header-nav">
+              <button className="nav-link" onClick={() => navigate('/wishlist')}>
+                관심상품
+              </button>
               <button className="nav-link" onClick={() => navigate('/purchases')}>
                 구매 기록
               </button>
