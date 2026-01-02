@@ -1,7 +1,8 @@
 /**
  * RecommendationPanel 컴포넌트
- * 우측 추천 카드 영역
+ * 우측 추천 카드 영역 (5개씩 표시, 재추천 버튼으로 다음 5개)
  */
+import { useState, useEffect } from 'react';
 import {
   ChatResponse,
   GiftRecommendation,
@@ -150,31 +151,10 @@ function renderRecommendations(
 ) {
   if (!recommendations) return null;
 
-  // GIFT 모드
+  // GIFT 모드 (5개씩 페이징)
   if (intent === 'GIFT' && 'cards' in recommendations) {
     const giftRec = recommendations as GiftRecommendation;
-    return (
-      <div className="gift-recommendations">
-        <div className="rec-summary">
-          <div className="summary-header">
-            <span className="gift-icon">🎁</span>
-            <div>
-              <p className="recipient">
-                <strong>{giftRec.recipient_summary}</strong>
-                {giftRec.occasion && <span className="occasion"> · {giftRec.occasion}</span>}
-              </p>
-              <p className="budget-info">예산: {giftRec.budget_range}</p>
-            </div>
-          </div>
-          <p className="rec-count">{giftRec.cards.length}개의 추천 상품</p>
-        </div>
-        <div className="gift-cards-grid">
-          {giftRec.cards.map((card, index) => (
-            <GiftCard key={card.product_id} card={card} index={index} />
-          ))}
-        </div>
-      </div>
-    );
+    return <GiftRecommendationWithPaging recommendation={giftRec} />;
   }
 
   // VALUE 모드
@@ -421,6 +401,85 @@ function BundleProductCard({ card }: { card: RecommendationCard }) {
         <p className="mall">{card.mall_name}</p>
       </div>
     </a>
+  );
+}
+
+// GIFT 모드 - 5개씩 페이징 컴포넌트
+function GiftRecommendationWithPaging({ recommendation }: { recommendation: GiftRecommendation }) {
+  const ITEMS_PER_PAGE = 5;
+  const [currentPage, setCurrentPage] = useState(0);
+  const [allCards] = useState(recommendation.cards);
+
+  // 새 추천이 오면 페이지 초기화
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [recommendation]);
+
+  const totalPages = Math.ceil(allCards.length / ITEMS_PER_PAGE);
+  const startIndex = currentPage * ITEMS_PER_PAGE;
+  const visibleCards = allCards.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const hasMore = currentPage < totalPages - 1;
+  const hasPrev = currentPage > 0;
+
+  const handleNextPage = () => {
+    if (hasMore) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (hasPrev) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  return (
+    <div className="gift-recommendations">
+      <div className="rec-summary">
+        <div className="summary-header">
+          <span className="gift-icon">🎁</span>
+          <div>
+            <p className="recipient">
+              <strong>{recommendation.recipient_summary}</strong>
+              {recommendation.occasion && <span className="occasion"> · {recommendation.occasion}</span>}
+            </p>
+            <p className="budget-info">예산: {recommendation.budget_range}</p>
+          </div>
+        </div>
+        <p className="rec-count">
+          {allCards.length}개 중 {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, allCards.length)}번째
+        </p>
+      </div>
+
+      <div className="gift-cards-grid">
+        {visibleCards.map((card, index) => (
+          <GiftCard key={card.product_id} card={card} index={index} />
+        ))}
+      </div>
+
+      {/* 페이징 버튼 */}
+      {totalPages > 1 && (
+        <div className="paging-controls">
+          <button
+            className="paging-button prev"
+            onClick={handlePrevPage}
+            disabled={!hasPrev}
+          >
+            ← 이전
+          </button>
+          <span className="page-info">
+            {currentPage + 1} / {totalPages}
+          </span>
+          <button
+            className="paging-button next"
+            onClick={handleNextPage}
+            disabled={!hasMore}
+          >
+            다른 추천 →
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 

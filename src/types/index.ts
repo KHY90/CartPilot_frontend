@@ -167,3 +167,30 @@ export interface ChatState {
   currentResponse: ChatResponse | null;
   sessionId: string | null;
 }
+
+// ==================== 인증 관련 타입 ====================
+// 사용자 정보
+export interface User {
+  id: string;
+  email?: string;
+  name?: string;
+  profile_image?: string;
+  provider: 'kakao' | 'naver';
+  kakao_notification_enabled: boolean;
+  email_notification_enabled: boolean;
+  created_at?: string;
+}
+
+// 토큰 응답 (refresh_token은 HTTP-only 쿠키로 전송됨)
+export interface TokenResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+}
+
+// 인증 상태
+export interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+}

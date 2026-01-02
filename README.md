@@ -4,11 +4,12 @@ AI 쇼핑 어시스턴트 프론트엔드 - React + TypeScript
 
 ## 기술 스택
 
-- **Framework**: React 18
+- **Framework**: React 18.x
 - **Language**: TypeScript 5.x
-- **Build Tool**: Vite
+- **Build Tool**: Vite 6.x
 - **HTTP Client**: Axios
 - **Styling**: CSS (CSS Variables)
+- **Backend**: CartPilot Backend (LangGraph 1.0+, LangChain 1.2+)
 
 ## 프로젝트 구조
 
