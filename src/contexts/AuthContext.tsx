@@ -2,7 +2,7 @@
  * 인증 Context
  * 전역 인증 상태 관리
  */
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '../types';
 import {
   getCurrentUser,
