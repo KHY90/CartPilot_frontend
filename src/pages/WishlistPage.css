@@ -385,6 +385,316 @@
   color: #ef4444;
 }
 
+/* 가격 확인 버튼 */
+.check-price-btn:hover {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+.check-price-btn.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #888;
+  border-top-color: #f59e0b;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* 가격 분석 섹션 */
+.price-analysis-section {
+  background: rgba(102, 126, 234, 0.05);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.analysis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.analysis-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.recommendation-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-buy {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.badge-wait {
+  background: rgba(234, 179, 8, 0.2);
+  color: #eab308;
+}
+
+.badge-neutral {
+  background: rgba(136, 136, 136, 0.2);
+  color: #888;
+}
+
+.analysis-stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.analysis-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 70px;
+}
+
+.analysis-stat .stat-label {
+  font-size: 10px;
+  color: #666;
+}
+
+.analysis-stat .stat-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+}
+
+.analysis-stat .stat-value.high {
+  color: #ef4444;
+}
+
+.analysis-stat .stat-value.down {
+  color: #22c55e;
+}
+
+.analysis-stat .stat-value.up {
+  color: #ef4444;
+}
+
+.is-lowest-indicator {
+  margin-top: 10px;
+  padding: 8px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 6px;
+  color: #22c55e;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.price-analysis-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  color: #666;
+  font-size: 12px;
+}
+
+.analysis-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #333;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* 가격 체크 결과 모달 */
+.price-check-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.price-check-modal {
+  background: #1a1a2e;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid #333;
+}
+
+.price-check-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.price-check-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: white;
+}
+
+.price-check-header .close-button {
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.price-check-header .close-button:hover {
+  color: white;
+}
+
+.price-check-content {
+  padding: 24px;
+}
+
+.price-change-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.price-change-indicator.down {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.price-change-indicator.up {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.change-icon {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.change-text {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.price-comparison {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.price-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+
+.price-item .label {
+  font-size: 12px;
+  color: #888;
+}
+
+.price-item .value {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+}
+
+.price-item.previous .value {
+  text-decoration: line-through;
+  color: #666;
+}
+
+.price-arrow {
+  font-size: 20px;
+  color: #888;
+}
+
+.change-details {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.change-amount {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.change-amount.down {
+  color: #22c55e;
+}
+
+.change-amount.up {
+  color: #ef4444;
+}
+
+.lowest-alert {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.no-change {
+  text-align: center;
+}
+
+.no-change-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 24px;
+  color: #667eea;
+}
+
+.no-change p {
+  margin: 0 0 8px 0;
+  color: #888;
+}
+
+.current-price-display {
+  font-size: 16px;
+  font-weight: 600;
+  color: white !important;
+}
+
 /* 반응형 */
 @media (max-width: 768px) {
   .wishlist-page {

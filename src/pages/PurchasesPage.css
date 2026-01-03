@@ -186,6 +186,25 @@
   color: var(--color-text-muted);
 }
 
+.btn-edit {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+}
+
+.btn-edit:hover {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
 .btn-delete {
   width: 28px;
   height: 28px;

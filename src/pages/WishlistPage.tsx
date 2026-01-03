@@ -9,7 +9,11 @@ import {
   getWishlist,
   removeFromWishlist,
   updateWishlistItem,
+  checkPriceNow,
+  getPriceAnalysis,
   WishlistItem,
+  PriceCheckResult,
+  PriceAnalysis,
 } from '../services/wishlistApi';
 import PriceHistoryChart from '../components/PriceHistoryChart/PriceHistoryChart';
 import './WishlistPage.css';
@@ -24,6 +28,17 @@ function WishlistPage() {
   const [selectedItem, setSelectedItem] = useState<WishlistItem | null>(null);
   const [editingTargetPrice, setEditingTargetPrice] = useState<string | null>(null);
   const [targetPriceInput, setTargetPriceInput] = useState('');
+
+  // 수동 가격 체크 상태
+  const [checkingPriceId, setCheckingPriceId] = useState<string | null>(null);
+  const [priceCheckResult, setPriceCheckResult] = useState<{
+    itemId: string;
+    result: PriceCheckResult;
+  } | null>(null);
+
+  // 가격 분석 데이터 캐시
+  const [priceAnalyses, setPriceAnalyses] = useState<Record<string, PriceAnalysis>>({});
+  const [loadingAnalysisIds, setLoadingAnalysisIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -114,6 +129,82 @@ function WishlistPage() {
     return null;
   };
 
+  // 수동 가격 체크
+  const handleCheckPrice = async (item: WishlistItem) => {
+    setCheckingPriceId(item.id);
+
+    try {
+      const result = await checkPriceNow(item.id);
+
+      // 가격이 변경되었으면 목록 업데이트
+      if (result.price_changed) {
+        setItems(items.map((i) =>
+          i.id === item.id
+            ? {
+                ...i,
+                current_price: result.current_price,
+                lowest_price_90days: result.lowest_90days || i.lowest_price_90days,
+              }
+            : i
+        ));
+      }
+
+      // 결과 모달 표시
+      setPriceCheckResult({ itemId: item.id, result });
+    } catch (err) {
+      alert('가격 확인에 실패했습니다.');
+      console.error(err);
+    } finally {
+      setCheckingPriceId(null);
+    }
+  };
+
+  const closePriceCheckResult = () => {
+    setPriceCheckResult(null);
+  };
+
+  // 가격 분석 데이터 로드
+  const loadPriceAnalysis = async (itemId: string) => {
+    if (priceAnalyses[itemId] || loadingAnalysisIds.has(itemId)) {
+      return;
+    }
+
+    setLoadingAnalysisIds((prev) => new Set(prev).add(itemId));
+
+    try {
+      const analysis = await getPriceAnalysis(itemId);
+      setPriceAnalyses((prev) => ({ ...prev, [itemId]: analysis }));
+    } catch (err) {
+      console.error(`가격 분석 로드 실패 (${itemId}):`, err);
+    } finally {
+      setLoadingAnalysisIds((prev) => {
+        const next = new Set(prev);
+        next.delete(itemId);
+        return next;
+      });
+    }
+  };
+
+  // 아이템 로드 후 가격 분석 데이터도 로드
+  useEffect(() => {
+    if (items.length > 0) {
+      items.forEach((item) => loadPriceAnalysis(item.id));
+    }
+  }, [items.length]);
+
+  // 추천 배지 텍스트/스타일 결정
+  const getRecommendationBadge = (recommendation: 'buy' | 'wait' | 'neutral') => {
+    switch (recommendation) {
+      case 'buy':
+        return { text: '지금 구매 추천', className: 'badge-buy' };
+      case 'wait':
+        return { text: '대기 권장', className: 'badge-wait' };
+      case 'neutral':
+      default:
+        return { text: '보통', className: 'badge-neutral' };
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="wishlist-page">
@@ -201,6 +292,55 @@ function WishlistPage() {
                     )}
                   </div>
 
+                  {/* 가격 분석 정보 */}
+                  {priceAnalyses[item.id] && (
+                    <div className="price-analysis-section">
+                      <div className="analysis-header">
+                        <span className="analysis-title">가격 분석</span>
+                        <span className={`recommendation-badge ${getRecommendationBadge(priceAnalyses[item.id].recommendation).className}`}>
+                          {getRecommendationBadge(priceAnalyses[item.id].recommendation).text}
+                        </span>
+                      </div>
+
+                      <div className="analysis-stats">
+                        {priceAnalyses[item.id].highest_90days && (
+                          <div className="analysis-stat">
+                            <span className="stat-label">90일 최고</span>
+                            <span className="stat-value high">{formatPrice(priceAnalyses[item.id].highest_90days!)}</span>
+                          </div>
+                        )}
+                        {priceAnalyses[item.id].average_90days && (
+                          <div className="analysis-stat">
+                            <span className="stat-label">90일 평균</span>
+                            <span className="stat-value">{formatPrice(priceAnalyses[item.id].average_90days!)}</span>
+                          </div>
+                        )}
+                        {priceAnalyses[item.id].price_change_percent !== undefined && (
+                          <div className="analysis-stat">
+                            <span className="stat-label">변동률</span>
+                            <span className={`stat-value ${priceAnalyses[item.id].price_change_percent! < 0 ? 'down' : 'up'}`}>
+                              {priceAnalyses[item.id].price_change_percent! > 0 ? '+' : ''}
+                              {priceAnalyses[item.id].price_change_percent!.toFixed(1)}%
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      {priceAnalyses[item.id].is_lowest && (
+                        <div className="is-lowest-indicator">
+                          현재 90일 최저가입니다!
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {loadingAnalysisIds.has(item.id) && (
+                    <div className="price-analysis-loading">
+                      <div className="analysis-spinner" />
+                      <span>분석 중...</span>
+                    </div>
+                  )}
+
                   <div className="target-price-section">
                     {editingTargetPrice === item.id ? (
                       <div className="target-price-edit">
@@ -258,6 +398,28 @@ function WishlistPage() {
                   </button>
 
                   <button
+                    className={`action-btn check-price-btn ${checkingPriceId === item.id ? 'loading' : ''}`}
+                    onClick={() => handleCheckPrice(item)}
+                    disabled={checkingPriceId === item.id}
+                    title="지금 가격 확인"
+                  >
+                    {checkingPriceId === item.id ? (
+                      <>
+                        <div className="btn-spinner" />
+                        확인 중...
+                      </>
+                    ) : (
+                      <>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M23 4v6h-6" />
+                          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                        </svg>
+                        가격 확인
+                      </>
+                    )}
+                  </button>
+
+                  <button
                     className={`action-btn notification-btn ${item.notification_enabled ? 'active' : ''}`}
                     onClick={() => handleToggleNotification(item)}
                     title={item.notification_enabled ? '알림 끄기' : '알림 켜기'}
@@ -307,6 +469,73 @@ function WishlistPage() {
           lowestPrice90days={selectedItem.lowest_price_90days}
           onClose={() => setSelectedItem(null)}
         />
+      )}
+
+      {/* 가격 체크 결과 모달 */}
+      {priceCheckResult && (
+        <div className="price-check-overlay" onClick={closePriceCheckResult}>
+          <div className="price-check-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="price-check-header">
+              <h3>가격 확인 결과</h3>
+              <button className="close-button" onClick={closePriceCheckResult}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="price-check-content">
+              {priceCheckResult.result.price_changed ? (
+                <>
+                  <div className={`price-change-indicator ${priceCheckResult.result.change_amount < 0 ? 'down' : 'up'}`}>
+                    <span className="change-icon">
+                      {priceCheckResult.result.change_amount < 0 ? '↓' : '↑'}
+                    </span>
+                    <span className="change-text">
+                      {priceCheckResult.result.change_amount < 0 ? '가격 하락!' : '가격 상승'}
+                    </span>
+                  </div>
+
+                  <div className="price-comparison">
+                    <div className="price-item previous">
+                      <span className="label">이전 가격</span>
+                      <span className="value">{priceCheckResult.result.previous_price.toLocaleString()}원</span>
+                    </div>
+                    <div className="price-arrow">→</div>
+                    <div className="price-item current">
+                      <span className="label">현재 가격</span>
+                      <span className="value">{priceCheckResult.result.current_price.toLocaleString()}원</span>
+                    </div>
+                  </div>
+
+                  <div className="change-details">
+                    <span className={`change-amount ${priceCheckResult.result.change_amount < 0 ? 'down' : 'up'}`}>
+                      {priceCheckResult.result.change_amount < 0 ? '' : '+'}
+                      {priceCheckResult.result.change_amount.toLocaleString()}원
+                      ({priceCheckResult.result.change_percent > 0 ? '+' : ''}
+                      {priceCheckResult.result.change_percent.toFixed(1)}%)
+                    </span>
+                  </div>
+
+                  {priceCheckResult.result.is_lowest && (
+                    <div className="lowest-alert">
+                      지금이 90일 최저가입니다!
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="no-change">
+                  <div className="no-change-icon">✓</div>
+                  <p>가격 변동이 없습니다.</p>
+                  <p className="current-price-display">
+                    현재 가격: {priceCheckResult.result.current_price.toLocaleString()}원
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
