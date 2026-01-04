@@ -3,6 +3,7 @@
  * 전역 인증 상태 관리
  */
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { AxiosError } from 'axios';
 import { User } from '../types';
 import {
   getCurrentUser,
@@ -48,9 +49,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const userData = await getCurrentUser();
       setUser(userData);
-    } catch {
-      // 토큰이 유효하지 않으면 삭제
-      clearTokens();
+    } catch (error) {
+      // 401/403 에러인 경우에만 토큰 삭제 (토큰이 무효한 경우)
+      // 네트워크 에러나 서버 다운인 경우에는 토큰 유지
+      if (error instanceof AxiosError && (error.response?.status === 401 || error.response?.status === 403)) {
+        clearTokens();
+      } else {
+        // 네트워크 에러 등: 토큰은 유지하고 사용자 정보만 없는 상태로 설정
+        // 다음 새로고침 시 다시 시도
+        console.warn('인증 확인 실패 (네트워크 에러 가능성):', error);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -73,9 +81,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const userData = await getCurrentUser();
       setUser(userData);
-    } catch {
-      setUser(null);
-      clearTokens();
+    } catch (error) {
+      // 401/403 에러인 경우에만 토큰 삭제
+      if (error instanceof AxiosError && (error.response?.status === 401 || error.response?.status === 403)) {
+        setUser(null);
+        clearTokens();
+      }
+      // 네트워크 에러는 무시 (토큰 유지)
     }
   };
 

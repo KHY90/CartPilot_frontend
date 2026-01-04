@@ -149,4 +149,30 @@ export async function checkHealth(): Promise<HealthResponse> {
   return response.data;
 }
 
+/**
+ * 캐시된 검색 결과 타입
+ */
+export interface CachedProduct {
+  product_id: string;
+  title: string;
+  price: number;
+  price_display: string;
+  mall_name: string;
+  link: string;
+  image?: string;
+}
+
+export interface CachedSearchResults {
+  session_id: string;
+  products: CachedProduct[];
+}
+
+/**
+ * 캐시된 검색 결과 조회
+ */
+export async function getCachedSearchResults(sessionId: string): Promise<CachedSearchResults> {
+  const response = await apiClient.get<CachedSearchResults>(`/api/search-results/${sessionId}`);
+  return response.data;
+}
+
 export default apiClient;

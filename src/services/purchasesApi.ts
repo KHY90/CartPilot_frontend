@@ -1,10 +1,7 @@
 /**
  * 구매 기록 API 서비스
  */
-
-import { getAuthHeaders } from './authApi';
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import apiClient from './api';
 
 export interface PurchaseRecord {
   id: string;
@@ -54,58 +51,32 @@ export async function getPurchases(
   offset = 0,
   category?: string
 ): Promise<PurchaseRecord[]> {
-  const params = new URLSearchParams({
+  const params: Record<string, string> = {
     limit: limit.toString(),
     offset: offset.toString(),
-  });
+  };
   if (category) {
-    params.append('category', category);
+    params.category = category;
   }
 
-  const response = await fetch(`${API_BASE}/api/purchases?${params}`, {
-    headers: getAuthHeaders(),
-  });
-
-  if (!response.ok) {
-    throw new Error('구매 기록 조회 실패');
-  }
-
-  return response.json();
+  const response = await apiClient.get<PurchaseRecord[]>('/api/purchases', { params });
+  return response.data;
 }
 
 /**
  * 구매 기록 생성
  */
 export async function createPurchase(data: PurchaseCreate): Promise<PurchaseRecord> {
-  const response = await fetch(`${API_BASE}/api/purchases`, {
-    method: 'POST',
-    headers: {
-      ...getAuthHeaders(),
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    throw new Error('구매 기록 생성 실패');
-  }
-
-  return response.json();
+  const response = await apiClient.post<PurchaseRecord>('/api/purchases', data);
+  return response.data;
 }
 
 /**
  * 구매 기록 상세 조회
  */
 export async function getPurchase(purchaseId: string): Promise<PurchaseRecord> {
-  const response = await fetch(`${API_BASE}/api/purchases/${purchaseId}`, {
-    headers: getAuthHeaders(),
-  });
-
-  if (!response.ok) {
-    throw new Error('구매 기록 조회 실패');
-  }
-
-  return response.json();
+  const response = await apiClient.get<PurchaseRecord>(`/api/purchases/${purchaseId}`);
+  return response.data;
 }
 
 /**
@@ -115,62 +86,29 @@ export async function updatePurchase(
   purchaseId: string,
   data: PurchaseUpdate
 ): Promise<PurchaseRecord> {
-  const response = await fetch(`${API_BASE}/api/purchases/${purchaseId}`, {
-    method: 'PUT',
-    headers: {
-      ...getAuthHeaders(),
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    throw new Error('구매 기록 수정 실패');
-  }
-
-  return response.json();
+  const response = await apiClient.put<PurchaseRecord>(`/api/purchases/${purchaseId}`, data);
+  return response.data;
 }
 
 /**
  * 구매 기록 삭제
  */
 export async function deletePurchase(purchaseId: string): Promise<void> {
-  const response = await fetch(`${API_BASE}/api/purchases/${purchaseId}`, {
-    method: 'DELETE',
-    headers: getAuthHeaders(),
-  });
-
-  if (!response.ok) {
-    throw new Error('구매 기록 삭제 실패');
-  }
+  await apiClient.delete(`/api/purchases/${purchaseId}`);
 }
 
 /**
  * 구매 통계 조회
  */
 export async function getPurchaseStats(): Promise<PurchaseStats> {
-  const response = await fetch(`${API_BASE}/api/purchases/stats/summary`, {
-    headers: getAuthHeaders(),
-  });
-
-  if (!response.ok) {
-    throw new Error('구매 통계 조회 실패');
-  }
-
-  return response.json();
+  const response = await apiClient.get<PurchaseStats>('/api/purchases/stats/summary');
+  return response.data;
 }
 
 /**
  * 카테고리 목록 조회
  */
 export async function getCategories(): Promise<string[]> {
-  const response = await fetch(`${API_BASE}/api/purchases/categories`, {
-    headers: getAuthHeaders(),
-  });
-
-  if (!response.ok) {
-    throw new Error('카테고리 목록 조회 실패');
-  }
-
-  return response.json();
+  const response = await apiClient.get<string[]>('/api/purchases/categories');
+  return response.data;
 }

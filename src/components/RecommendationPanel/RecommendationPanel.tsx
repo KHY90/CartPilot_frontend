@@ -13,7 +13,12 @@ import {
   RecommendationCard,
   IntentType
 } from '../../types';
+import { useAuth } from '../../contexts/AuthContext';
 import GiftCard from './GiftCard';
+import WishlistButton from '../common/WishlistButton';
+import StarRating from '../common/StarRating';
+import { addToWishlist, removeFromWishlist, getWishlist, WishlistItem } from '../../services/wishlistApi';
+import { rateProduct, getRatingForProduct } from '../../services/ratingsApi';
 import SearchProgress from '../common/SearchProgress';
 import './RecommendationPanel.css';
 
@@ -458,7 +463,7 @@ function GiftRecommendationWithPaging({ recommendation }: { recommendation: Gift
       </div>
 
       {/* 페이징 버튼 */}
-      {totalPages > 1 && (
+      {totalPages > 1 ? (
         <div className="paging-controls">
           <button
             className="paging-button prev"
@@ -478,29 +483,124 @@ function GiftRecommendationWithPaging({ recommendation }: { recommendation: Gift
             다른 추천 →
           </button>
         </div>
+      ) : (
+        <div className="no-more-hint">
+          <p>마음에 드는 상품이 없으신가요?</p>
+          <p className="hint-sub">다른 조건으로 다시 검색해 보세요!</p>
+        </div>
       )}
     </div>
   );
 }
 
-// VALUE 모드용 카드 컴포넌트
+// VALUE 모드용 카드 컴포넌트 (관심상품, 별점 기능 포함)
 function ValueCard({ card }: { card: RecommendationCard }) {
+  const { isAuthenticated } = useAuth();
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [wishlistItemId, setWishlistItemId] = useState<string | null>(null);
+  const [rating, setRating] = useState(0);
+
+  // 초기 상태 로드
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadUserData();
+    }
+  }, [isAuthenticated, card.product_id]);
+
+  const loadUserData = async () => {
+    try {
+      // 별점 로드
+      const existingRating = await getRatingForProduct(card.product_id);
+      if (existingRating) {
+        setRating(existingRating.rating);
+      }
+
+      // 관심상품 여부 확인
+      const wishlist = await getWishlist();
+      const item = wishlist.find((w: WishlistItem) => w.product_id === card.product_id);
+      if (item) {
+        setIsWishlisted(true);
+        setWishlistItemId(item.id);
+      }
+    } catch {
+      // 조용히 실패
+    }
+  };
+
+  const handleRate = async (newRating: number) => {
+    if (!isAuthenticated) return;
+
+    try {
+      await rateProduct({
+        product_id: card.product_id,
+        product_name: card.title,
+        price: card.price,
+        rating: newRating,
+      });
+      setRating(newRating);
+    } catch {
+      // 에러 처리
+    }
+  };
+
+  const handleWishlistToggle = async () => {
+    if (!isAuthenticated) return;
+
+    try {
+      if (isWishlisted && wishlistItemId) {
+        await removeFromWishlist(wishlistItemId);
+        setIsWishlisted(false);
+        setWishlistItemId(null);
+      } else {
+        const item = await addToWishlist({
+          product_id: card.product_id,
+          product_name: card.title,
+          product_image: card.image,
+          product_link: card.link,
+          mall_name: card.mall_name,
+          current_price: card.price,
+        });
+        setIsWishlisted(true);
+        setWishlistItemId(item.id);
+      }
+    } catch {
+      // 에러 처리
+    }
+  };
+
   return (
     <div className="value-card">
-      <a href={card.link} target="_blank" rel="noopener noreferrer" className="card-link">
-        <div className="card-image">
-          {card.image ? (
-            <img src={card.image} alt={card.title} loading="lazy" />
-          ) : (
-            <div className="no-image">이미지 없음</div>
-          )}
+      <div className="card-link-wrapper">
+        <a href={card.link} target="_blank" rel="noopener noreferrer" className="card-link">
+          <div className="card-image">
+            {card.image ? (
+              <img src={card.image} alt={card.title} loading="lazy" />
+            ) : (
+              <div className="no-image">이미지 없음</div>
+            )}
+          </div>
+          <div className="card-content">
+            <h4 className="card-title">{card.title}</h4>
+            <p className="card-price">{card.price_display}</p>
+            <p className="card-mall">{card.mall_name}</p>
+          </div>
+        </a>
+        {isAuthenticated && (
+          <div className="value-card-wishlist">
+            <WishlistButton
+              isWishlisted={isWishlisted}
+              onToggle={handleWishlistToggle}
+              size="medium"
+            />
+          </div>
+        )}
+      </div>
+      {isAuthenticated && (
+        <div className="value-card-rating">
+          <StarRating rating={rating} onRate={handleRate} size="small" />
+          {rating > 0 && <span className="rating-text">{rating}점</span>}
         </div>
-        <div className="card-content">
-          <h4 className="card-title">{card.title}</h4>
-          <p className="card-price">{card.price_display}</p>
-          <p className="card-mall">{card.mall_name}</p>
-        </div>
-      </a>
+      )}
       <div className="card-details">
         <p className="recommendation-reason">{card.recommendation_reason}</p>
         {card.tier_benefits && (

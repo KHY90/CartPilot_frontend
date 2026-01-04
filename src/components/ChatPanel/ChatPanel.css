@@ -1,6 +1,7 @@
 /* ChatPanel Styles */
 
 .chat-panel {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -168,4 +169,115 @@
   padding: 16px 20px;
   border-top: 1px solid var(--color-border);
   background-color: var(--color-surface);
+}
+
+/* Login Prompt Modal */
+.login-prompt-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.login-prompt-modal {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  max-width: 360px;
+  width: 90%;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-prompt-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-primary-light);
+  border-radius: 50%;
+}
+
+.login-prompt-icon svg {
+  color: var(--color-primary);
+}
+
+.login-prompt-modal h3 {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.login-prompt-modal p {
+  margin: 0 0 24px 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.login-prompt-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.login-prompt-buttons button {
+  flex: 1;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.login-prompt-buttons .btn-secondary {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.login-prompt-buttons .btn-secondary:hover {
+  background-color: var(--color-border);
+}
+
+.login-prompt-buttons .btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+}
+
+.login-prompt-buttons .btn-primary:hover {
+  background-color: var(--color-primary-hover);
 }

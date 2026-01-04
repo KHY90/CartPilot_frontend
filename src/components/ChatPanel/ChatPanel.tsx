@@ -3,7 +3,9 @@
  * 좌측 채팅 영역
  */
 import { useRef, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ConversationMessage } from '../../types';
+import { useAuth } from '../../contexts/AuthContext';
 import MessageBubble from './MessageBubble';
 import InputBox from './InputBox';
 import ErrorMessage from '../common/ErrorMessage';
@@ -26,16 +28,31 @@ function ChatPanel({
   onClearChat,
   onClearError,
 }: ChatPanelProps) {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [inputValue, setInputValue] = useState('');
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   const handleExampleClick = (example: string) => {
+    if (!isAuthenticated) {
+      setShowLoginPrompt(true);
+      return;
+    }
     setInputValue(example);
   };
 
   const handleSendMessage = (message: string) => {
+    if (!isAuthenticated) {
+      setShowLoginPrompt(true);
+      return;
+    }
     onSendMessage(message);
     setInputValue('');
+  };
+
+  const handleLoginClick = () => {
+    navigate('/login');
   };
 
   // 새 메시지 시 스크롤
@@ -101,6 +118,31 @@ function ChatPanel({
           onChange={setInputValue}
         />
       </div>
+
+      {/* 로그인 필요 모달 */}
+      {showLoginPrompt && (
+        <div className="login-prompt-overlay" onClick={() => setShowLoginPrompt(false)}>
+          <div className="login-prompt-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="login-prompt-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                <polyline points="10 17 15 12 10 7"/>
+                <line x1="15" y1="12" x2="3" y2="12"/>
+              </svg>
+            </div>
+            <h3>로그인이 필요합니다</h3>
+            <p>상품 검색 및 추천 서비스를 이용하려면<br/>로그인해 주세요.</p>
+            <div className="login-prompt-buttons">
+              <button className="btn-secondary" onClick={() => setShowLoginPrompt(false)}>
+                취소
+              </button>
+              <button className="btn-primary" onClick={handleLoginClick}>
+                로그인하기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

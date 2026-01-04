@@ -10,7 +10,7 @@ import LoginPage from './pages/LoginPage';
 import AuthCallback from './pages/AuthCallback';
 import PurchasesPage from './pages/PurchasesPage';
 import WishlistPage from './pages/WishlistPage';
-import useChat from './hooks/useChat';
+import { ChatProvider, useChat } from './contexts/ChatContext';
 import './App.css';
 
 function HomePage() {
@@ -45,39 +45,41 @@ function HomePage() {
 
 function App() {
   return (
-    <div className="app">
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/auth/callback" element={<AuthCallback />} />
-        <Route
-          path="/wishlist"
-          element={
-            <>
-              <Header />
-              <WishlistPage />
-            </>
-          }
-        />
-        <Route
-          path="/purchases"
-          element={
-            <>
-              <Header />
-              <PurchasesPage />
-            </>
-          }
-        />
-        <Route
-          path="/*"
-          element={
-            <>
-              <Header />
-              <HomePage />
-            </>
-          }
-        />
-      </Routes>
-    </div>
+    <ChatProvider>
+      <div className="app">
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route
+            path="/wishlist"
+            element={
+              <>
+                <Header />
+                <WishlistPage />
+              </>
+            }
+          />
+          <Route
+            path="/purchases"
+            element={
+              <>
+                <Header />
+                <PurchasesPage />
+              </>
+            }
+          />
+          <Route
+            path="/*"
+            element={
+              <>
+                <Header />
+                <HomePage />
+              </>
+            }
+          />
+        </Routes>
+      </div>
+    </ChatProvider>
   );
 }
 

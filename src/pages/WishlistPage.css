@@ -12,6 +12,13 @@
   margin: 0 auto 32px;
 }
 
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
 .wishlist-header h2 {
   margin: 0 0 8px 0;
   font-size: 28px;
@@ -23,6 +30,129 @@
   margin: 0;
   font-size: 14px;
   color: #888;
+}
+
+/* 직접 등록 버튼 */
+.add-manual-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.add-manual-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* 헤더 버튼 그룹 */
+.header-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+/* 알림 설정 버튼 */
+.notification-settings-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: transparent;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: #ccc;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.notification-settings-button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #667eea;
+  color: white;
+}
+
+/* 알림 설정 모달 스타일 */
+.notification-modal {
+  max-width: 450px;
+}
+
+.notification-description {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: white;
+  font-size: 14px;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #667eea;
+  cursor: pointer;
+}
+
+.email-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: #1a1a2e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.email-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.email-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.notification-conditions {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.notification-conditions h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.notification-conditions ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #aaa;
+  font-size: 13px;
+  line-height: 1.8;
 }
 
 /* 로딩 */
@@ -318,6 +448,41 @@
   color: white;
 }
 
+/* 별점 섹션 */
+.wishlist-page .rating-section {
+  margin-bottom: 12px;
+  padding: 12px;
+  background: rgba(102, 126, 234, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.wishlist-page .rating-label {
+  display: block;
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.wishlist-page .rating-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wishlist-page .rating-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f59e0b;
+}
+
+.wishlist-page .rating-placeholder {
+  font-size: 12px;
+  color: #666;
+}
+
 /* 메타 */
 .card-meta {
   font-size: 11px;
@@ -385,10 +550,486 @@
   color: #ef4444;
 }
 
+/* 가격 확인 버튼 */
+.check-price-btn:hover {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+.check-price-btn.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #888;
+  border-top-color: #f59e0b;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* 가격 분석 섹션 */
+.price-analysis-section {
+  background: rgba(102, 126, 234, 0.05);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.analysis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.analysis-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.recommendation-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-buy {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.badge-wait {
+  background: rgba(234, 179, 8, 0.2);
+  color: #eab308;
+}
+
+.badge-neutral {
+  background: rgba(136, 136, 136, 0.2);
+  color: #888;
+}
+
+.analysis-stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.analysis-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 70px;
+}
+
+.analysis-stat .stat-label {
+  font-size: 10px;
+  color: #666;
+}
+
+.wishlist-page .analysis-stat .stat-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+}
+
+.analysis-stat .stat-value.high {
+  color: #ef4444;
+}
+
+.analysis-stat .stat-value.down {
+  color: #22c55e;
+}
+
+.analysis-stat .stat-value.up {
+  color: #ef4444;
+}
+
+.is-lowest-indicator {
+  margin-top: 10px;
+  padding: 8px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 6px;
+  color: #22c55e;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.price-analysis-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  color: #666;
+  font-size: 12px;
+}
+
+.analysis-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #333;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* 가격 체크 결과 모달 */
+.price-check-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.price-check-modal {
+  background: #1a1a2e;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid #333;
+}
+
+.price-check-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.price-check-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: white;
+}
+
+.price-check-header .close-button {
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.price-check-header .close-button:hover {
+  color: white;
+}
+
+.price-check-content {
+  padding: 24px;
+}
+
+.price-change-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.price-change-indicator.down {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.price-change-indicator.up {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.change-icon {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.change-text {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.price-comparison {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.price-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+
+.price-item .label {
+  font-size: 12px;
+  color: #888;
+}
+
+.price-item .value {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+}
+
+.price-item.previous .value {
+  text-decoration: line-through;
+  color: #666;
+}
+
+.price-arrow {
+  font-size: 20px;
+  color: #888;
+}
+
+.change-details {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.change-amount {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.change-amount.down {
+  color: #22c55e;
+}
+
+.change-amount.up {
+  color: #ef4444;
+}
+
+.lowest-alert {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.no-change {
+  text-align: center;
+}
+
+.no-change-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 24px;
+  color: #667eea;
+}
+
+.no-change p {
+  margin: 0 0 8px 0;
+  color: #888;
+}
+
+.current-price-display {
+  font-size: 16px;
+  font-weight: 600;
+  color: white !important;
+}
+
+/* 직접 등록 모달 */
+.add-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.add-modal {
+  background: #1a1a2e;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  border: 1px solid #333;
+}
+
+.add-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.add-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: white;
+}
+
+.add-modal-header .close-button {
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.add-modal-header .close-button:hover {
+  color: white;
+}
+
+.add-modal-content {
+  padding: 24px;
+}
+
+.add-modal-content .form-group {
+  margin-bottom: 20px;
+}
+
+.add-modal-content .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+.add-modal-content .category-select,
+.add-modal-content .product-name-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: #16162a !important;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: white !important;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.add-modal-content .category-select:focus,
+.add-modal-content .product-name-input:focus {
+  outline: none;
+  border-color: #667eea;
+  background: #16162a !important;
+  color: white !important;
+}
+
+/* 자동완성 스타일 오버라이드 */
+.add-modal-content .product-name-input:-webkit-autofill,
+.add-modal-content .product-name-input:-webkit-autofill:hover,
+.add-modal-content .product-name-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #16162a inset !important;
+  -webkit-text-fill-color: white !important;
+  background-color: #16162a !important;
+  caret-color: white;
+}
+
+.add-modal-content .category-select option {
+  background: #16162a;
+  color: white;
+}
+
+.add-modal-note {
+  margin: 0;
+  font-size: 12px;
+  color: #888;
+  text-align: center;
+}
+
+.add-modal-actions {
+  display: flex;
+  gap: 12px;
+  padding: 20px;
+  border-top: 1px solid #333;
+}
+
+.add-modal-actions .cancel-button,
+.add-modal-actions .submit-button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-modal-actions .cancel-button {
+  background: #333;
+  border: none;
+  color: #888;
+}
+
+.add-modal-actions .cancel-button:hover {
+  background: #444;
+  color: white;
+}
+
+.add-modal-actions .submit-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+}
+
+.add-modal-actions .submit-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.add-modal-actions .submit-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 /* 반응형 */
 @media (max-width: 768px) {
   .wishlist-page {
     padding: 20px 16px;
+  }
+
+  .header-top {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .add-manual-button {
+    width: 100%;
+    justify-content: center;
   }
 
   .wishlist-header h2 {

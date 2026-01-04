@@ -335,12 +335,37 @@
   box-shadow: var(--shadow-md);
 }
 
+.value-card .card-link-wrapper {
+  position: relative;
+}
+
 .value-card .card-link {
   display: flex;
   gap: 16px;
   padding: 16px;
   text-decoration: none;
   color: inherit;
+}
+
+.value-card-wishlist {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+}
+
+.value-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+.value-card-rating .rating-text {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
 .value-card .card-image {
@@ -865,6 +890,74 @@
   font-size: 14px;
   font-weight: 600;
   color: var(--color-primary);
+}
+
+/* No More Hint */
+.no-more-hint {
+  text-align: center;
+  padding: 20px;
+  margin-top: 16px;
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--color-border);
+}
+
+.no-more-hint p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.no-more-hint p:first-child {
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.no-more-hint .hint-sub {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+/* Paging Controls */
+.paging-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 16px;
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+}
+
+.paging-button {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.paging-button:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.paging-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
 /* Responsive */
