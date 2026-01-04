@@ -59,12 +59,18 @@ export function useChat() {
         metadata: { response },
       };
 
+      // 세션 ID 저장 (구매 기록 등록용)
+      const newSessionId = response.session_id || state.sessionId;
+      if (newSessionId) {
+        localStorage.setItem('cartpilot_last_session_id', newSessionId);
+      }
+
       setState((prev) => ({
         ...prev,
         messages: [...prev.messages, assistantMessage],
         isLoading: false,
         currentResponse: response,
-        sessionId: prev.sessionId, // 세션 유지
+        sessionId: newSessionId,
       }));
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다';

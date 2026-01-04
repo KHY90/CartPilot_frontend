@@ -2,7 +2,11 @@
  * GiftCard 컴포넌트
  * GIFT 모드 전용 상품 카드
  */
+import { useState, useEffect } from 'react';
 import { RecommendationCard } from '../../types';
+import { useAuth } from '../../contexts/AuthContext';
+import WishlistButton from '../common/WishlistButton';
+import { addToWishlist, removeFromWishlist, getWishlist } from '../../services/wishlistApi';
 import './GiftCard.css';
 
 interface GiftCardProps {
@@ -11,19 +15,78 @@ interface GiftCardProps {
 }
 
 function GiftCard({ card, index }: GiftCardProps) {
-  const handleClick = () => {
+  const { isAuthenticated } = useAuth();
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [wishlistItemId, setWishlistItemId] = useState<string | null>(null);
+
+  // 초기 상태 로드
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadWishlistStatus();
+    }
+  }, [isAuthenticated, card.product_id]);
+
+  const loadWishlistStatus = async () => {
+    try {
+      const wishlist = await getWishlist();
+      const item = wishlist.find((w) => w.product_id === card.product_id);
+      if (item) {
+        setIsWishlisted(true);
+        setWishlistItemId(item.id);
+      }
+    } catch {
+      // 조용히 실패
+    }
+  };
+
+  const handleWishlistToggle = async () => {
+    if (!isAuthenticated) return;
+
+    try {
+      if (isWishlisted && wishlistItemId) {
+        await removeFromWishlist(wishlistItemId);
+        setIsWishlisted(false);
+        setWishlistItemId(null);
+      } else {
+        const item = await addToWishlist({
+          product_id: card.product_id,
+          product_name: card.title,
+          product_image: card.image,
+          product_link: card.link,
+          mall_name: card.mall_name,
+          current_price: card.price,
+        });
+        setIsWishlisted(true);
+        setWishlistItemId(item.id);
+      }
+    } catch {
+      // 에러 처리
+    }
+  };
+
+  const handleBuyClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     window.open(card.link, '_blank', 'noopener,noreferrer');
   };
 
   const rankClass = index < 3 ? `top-${index + 1}` : '';
 
   return (
-    <div className="gift-card" onClick={handleClick}>
+    <div className="gift-card">
       <div className={`gift-card-rank ${rankClass}`}>#{index + 1}</div>
 
       {card.image && (
         <div className="gift-card-image">
           <img src={card.image} alt={card.title} loading="lazy" />
+          {isAuthenticated && (
+            <div className="gift-card-wishlist">
+              <WishlistButton
+                isWishlisted={isWishlisted}
+                onToggle={handleWishlistToggle}
+                size="medium"
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -52,7 +115,7 @@ function GiftCard({ card, index }: GiftCardProps) {
           </div>
         )}
 
-        <button className="gift-card-button" onClick={(e) => e.stopPropagation()}>
+        <button className="gift-card-button" onClick={handleBuyClick}>
           구매하기
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '6px' }}>
             <line x1="5" y1="12" x2="19" y2="12"/>

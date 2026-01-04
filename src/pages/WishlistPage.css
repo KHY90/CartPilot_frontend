@@ -12,6 +12,13 @@
   margin: 0 auto 32px;
 }
 
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
 .wishlist-header h2 {
   margin: 0 0 8px 0;
   font-size: 28px;
@@ -23,6 +30,28 @@
   margin: 0;
   font-size: 14px;
   color: #888;
+}
+
+/* 직접 등록 버튼 */
+.add-manual-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.add-manual-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 /* 로딩 */
@@ -695,10 +724,176 @@
   color: white !important;
 }
 
+/* 직접 등록 모달 */
+.add-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.add-modal {
+  background: #1a1a2e;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  border: 1px solid #333;
+}
+
+.add-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.add-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: white;
+}
+
+.add-modal-header .close-button {
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.add-modal-header .close-button:hover {
+  color: white;
+}
+
+.add-modal-content {
+  padding: 24px;
+}
+
+.add-modal-content .form-group {
+  margin-bottom: 20px;
+}
+
+.add-modal-content .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+.add-modal-content .category-select,
+.add-modal-content .product-name-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: #16162a !important;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: white !important;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.add-modal-content .category-select:focus,
+.add-modal-content .product-name-input:focus {
+  outline: none;
+  border-color: #667eea;
+  background: #16162a !important;
+  color: white !important;
+}
+
+/* 자동완성 스타일 오버라이드 */
+.add-modal-content .product-name-input:-webkit-autofill,
+.add-modal-content .product-name-input:-webkit-autofill:hover,
+.add-modal-content .product-name-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #16162a inset !important;
+  -webkit-text-fill-color: white !important;
+  background-color: #16162a !important;
+  caret-color: white;
+}
+
+.add-modal-content .category-select option {
+  background: #16162a;
+  color: white;
+}
+
+.add-modal-note {
+  margin: 0;
+  font-size: 12px;
+  color: #888;
+  text-align: center;
+}
+
+.add-modal-actions {
+  display: flex;
+  gap: 12px;
+  padding: 20px;
+  border-top: 1px solid #333;
+}
+
+.add-modal-actions .cancel-button,
+.add-modal-actions .submit-button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-modal-actions .cancel-button {
+  background: #333;
+  border: none;
+  color: #888;
+}
+
+.add-modal-actions .cancel-button:hover {
+  background: #444;
+  color: white;
+}
+
+.add-modal-actions .submit-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+}
+
+.add-modal-actions .submit-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.add-modal-actions .submit-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 /* 반응형 */
 @media (max-width: 768px) {
   .wishlist-page {
     padding: 20px 16px;
+  }
+
+  .header-top {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .add-manual-button {
+    width: 100%;
+    justify-content: center;
   }
 
   .wishlist-header h2 {

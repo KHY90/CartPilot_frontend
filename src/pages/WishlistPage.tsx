@@ -11,12 +11,27 @@ import {
   updateWishlistItem,
   checkPriceNow,
   getPriceAnalysis,
+  addToWishlist,
   WishlistItem,
   PriceCheckResult,
   PriceAnalysis,
 } from '../services/wishlistApi';
 import PriceHistoryChart from '../components/PriceHistoryChart/PriceHistoryChart';
 import './WishlistPage.css';
+
+// 카테고리 목록
+const CATEGORIES = [
+  { value: 'food', label: '식음료' },
+  { value: 'fashion', label: '패션/의류' },
+  { value: 'electronics', label: '전자기기' },
+  { value: 'beauty', label: '뷰티/화장품' },
+  { value: 'home', label: '생활/가전' },
+  { value: 'sports', label: '스포츠/레저' },
+  { value: 'books', label: '도서/문구' },
+  { value: 'kids', label: '유아/아동' },
+  { value: 'pet', label: '반려동물' },
+  { value: 'other', label: '기타' },
+];
 
 function WishlistPage() {
   const { isAuthenticated } = useAuth();
@@ -39,6 +54,12 @@ function WishlistPage() {
   // 가격 분석 데이터 캐시
   const [priceAnalyses, setPriceAnalyses] = useState<Record<string, PriceAnalysis>>({});
   const [loadingAnalysisIds, setLoadingAnalysisIds] = useState<Set<string>>(new Set());
+
+  // 직접 등록 모달 상태
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newItemCategory, setNewItemCategory] = useState('');
+  const [newItemName, setNewItemName] = useState('');
+  const [isAddingItem, setIsAddingItem] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -163,6 +184,39 @@ function WishlistPage() {
     setPriceCheckResult(null);
   };
 
+  // 직접 상품 등록
+  const handleAddManualItem = async () => {
+    if (!newItemName.trim()) {
+      alert('상품명을 입력해주세요.');
+      return;
+    }
+    if (!newItemCategory) {
+      alert('카테고리를 선택해주세요.');
+      return;
+    }
+
+    setIsAddingItem(true);
+
+    try {
+      const newItem = await addToWishlist({
+        product_id: `manual_${Date.now()}`,
+        product_name: newItemName.trim(),
+        category: newItemCategory,
+        current_price: 0, // 직접 등록은 가격 추적 불가
+      });
+
+      setItems([newItem, ...items]);
+      setShowAddModal(false);
+      setNewItemName('');
+      setNewItemCategory('');
+    } catch (err) {
+      alert('상품 등록에 실패했습니다.');
+      console.error(err);
+    } finally {
+      setIsAddingItem(false);
+    }
+  };
+
   // 가격 분석 데이터 로드
   const loadPriceAnalysis = async (itemId: string) => {
     if (priceAnalyses[itemId] || loadingAnalysisIds.has(itemId)) {
@@ -230,10 +284,21 @@ function WishlistPage() {
   return (
     <div className="wishlist-page">
       <div className="wishlist-header">
-        <h2>관심상품</h2>
-        <p className="wishlist-subtitle">
-          가격 변동을 추적하고, 최저가일 때 알림을 받으세요
-        </p>
+        <div className="header-top">
+          <div>
+            <h2>관심상품</h2>
+            <p className="wishlist-subtitle">
+              가격 변동을 추적하고, 최저가일 때 알림을 받으세요
+            </p>
+          </div>
+          <button className="add-manual-button" onClick={() => setShowAddModal(true)}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            직접 등록
+          </button>
+        </div>
       </div>
 
       {items.length === 0 ? (
@@ -533,6 +598,77 @@ function WishlistPage() {
                   </p>
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 직접 등록 모달 */}
+      {showAddModal && (
+        <div className="add-modal-overlay" onClick={() => setShowAddModal(false)}>
+          <div className="add-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="add-modal-header">
+              <h3>관심상품 직접 등록</h3>
+              <button className="close-button" onClick={() => setShowAddModal(false)}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="add-modal-content">
+              <div className="form-group">
+                <label>카테고리</label>
+                <select
+                  value={newItemCategory}
+                  onChange={(e) => setNewItemCategory(e.target.value)}
+                  className="category-select"
+                >
+                  <option value="">카테고리 선택</option>
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat.value} value={cat.value}>
+                      {cat.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>상품명</label>
+                <input
+                  type="text"
+                  value={newItemName}
+                  onChange={(e) => setNewItemName(e.target.value)}
+                  placeholder="예: 펩시 제로 500ml"
+                  className="product-name-input"
+                  autoFocus
+                />
+              </div>
+
+              <p className="add-modal-note">
+                직접 등록한 상품은 가격 추적이 불가능합니다.
+              </p>
+            </div>
+
+            <div className="add-modal-actions">
+              <button
+                className="cancel-button"
+                onClick={() => {
+                  setShowAddModal(false);
+                  setNewItemName('');
+                  setNewItemCategory('');
+                }}
+              >
+                취소
+              </button>
+              <button
+                className="submit-button"
+                onClick={handleAddManualItem}
+                disabled={isAddingItem}
+              >
+                {isAddingItem ? '등록 중...' : '등록하기'}
+              </button>
             </div>
           </div>
         </div>

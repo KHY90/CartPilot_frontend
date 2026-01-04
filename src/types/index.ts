@@ -123,6 +123,7 @@ export interface ChatRequest {
 export interface ChatResponse {
   type: ResponseType;
   intent?: IntentType;
+  session_id?: string;
   recommendations?:
     | GiftRecommendation
     | ValueRecommendation

@@ -458,7 +458,7 @@ function GiftRecommendationWithPaging({ recommendation }: { recommendation: Gift
       </div>
 
       {/* 페이징 버튼 */}
-      {totalPages > 1 && (
+      {totalPages > 1 ? (
         <div className="paging-controls">
           <button
             className="paging-button prev"
@@ -477,6 +477,11 @@ function GiftRecommendationWithPaging({ recommendation }: { recommendation: Gift
           >
             다른 추천 →
           </button>
+        </div>
+      ) : (
+        <div className="no-more-hint">
+          <p>마음에 드는 상품이 없으신가요?</p>
+          <p className="hint-sub">다른 조건으로 다시 검색해 보세요!</p>
         </div>
       )}
     </div>
