@@ -616,6 +616,21 @@
   color: #888;
 }
 
+.badge-insufficient {
+  background: rgba(239, 115, 68, 0.2);
+  color: #f97316;
+}
+
+.insufficient-data-message {
+  padding: 10px 12px;
+  background: rgba(239, 115, 68, 0.1);
+  border: 1px solid rgba(239, 115, 68, 0.2);
+  border-radius: 6px;
+  color: #f97316;
+  font-size: 12px;
+  text-align: center;
+}
+
 .analysis-stats {
   display: flex;
   gap: 12px;

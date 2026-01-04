@@ -425,15 +425,16 @@ function PurchasesPage() {
                 <div className="form-group">
                   <label>가격 *</label>
                   <input
-                    type="number"
-                    value={formData.price}
-                    onChange={(e) =>
-                      setFormData({ ...formData, price: parseInt(e.target.value) || 0 })
-                    }
+                    type="text"
+                    inputMode="numeric"
+                    className="price-input"
+                    value={formData.price || ''}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/[^0-9]/g, '');
+                      setFormData({ ...formData, price: parseInt(value) || 0 });
+                    }}
                     required
-                    min="0"
-                    step="1000"
-                    placeholder="0"
+                    placeholder="가격 입력"
                   />
                 </div>
                 <div className="form-group">
@@ -532,15 +533,16 @@ function PurchasesPage() {
                 <div className="form-group">
                   <label>가격 *</label>
                   <input
-                    type="number"
-                    value={editFormData.price}
-                    onChange={(e) =>
-                      setEditFormData({ ...editFormData, price: parseInt(e.target.value) || 0 })
-                    }
+                    type="text"
+                    inputMode="numeric"
+                    className="price-input"
+                    value={editFormData.price || ''}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/[^0-9]/g, '');
+                      setEditFormData({ ...editFormData, price: parseInt(value) || 0 });
+                    }}
                     required
-                    min="0"
-                    step="1000"
-                    placeholder="0"
+                    placeholder="가격 입력"
                   />
                 </div>
                 <div className="form-group">
