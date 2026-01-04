@@ -497,7 +497,7 @@ function WishlistPage() {
                   </button>
 
                   <a
-                    href={item.product_link}
+                    href={item.product_link || `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(item.product_name)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="action-btn link-btn"
