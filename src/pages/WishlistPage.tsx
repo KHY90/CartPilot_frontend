@@ -16,6 +16,11 @@ import {
   PriceCheckResult,
   PriceAnalysis,
 } from '../services/wishlistApi';
+import {
+  getNotificationSettings,
+  updateNotificationSettings,
+  NotificationSettings,
+} from '../services/notificationApi';
 import PriceHistoryChart from '../components/PriceHistoryChart/PriceHistoryChart';
 import './WishlistPage.css';
 
@@ -61,12 +66,20 @@ function WishlistPage() {
   const [newItemName, setNewItemName] = useState('');
   const [isAddingItem, setIsAddingItem] = useState(false);
 
+  // 알림 설정 모달 상태
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [notificationSettings, setNotificationSettings] = useState<NotificationSettings | null>(null);
+  const [notificationEmail, setNotificationEmail] = useState('');
+  const [emailEnabled, setEmailEnabled] = useState(true);
+  const [isSavingNotification, setIsSavingNotification] = useState(false);
+
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login');
       return;
     }
     loadWishlist();
+    loadNotificationSettings();
   }, [isAuthenticated, navigate]);
 
   const loadWishlist = async () => {
@@ -81,6 +94,35 @@ function WishlistPage() {
       console.error(err);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadNotificationSettings = async () => {
+    try {
+      const settings = await getNotificationSettings();
+      setNotificationSettings(settings);
+      setNotificationEmail(settings.notification_email || '');
+      setEmailEnabled(settings.email_notification_enabled);
+    } catch (err) {
+      console.error('알림 설정 로드 실패:', err);
+    }
+  };
+
+  const handleSaveNotificationSettings = async () => {
+    setIsSavingNotification(true);
+    try {
+      const updated = await updateNotificationSettings({
+        email_notification_enabled: emailEnabled,
+        notification_email: notificationEmail || undefined,
+      });
+      setNotificationSettings(updated);
+      setShowNotificationModal(false);
+      alert('알림 설정이 저장되었습니다.');
+    } catch (err) {
+      alert('알림 설정 저장에 실패했습니다.');
+      console.error(err);
+    } finally {
+      setIsSavingNotification(false);
     }
   };
 
@@ -291,13 +333,22 @@ function WishlistPage() {
               가격 변동을 추적하고, 최저가일 때 알림을 받으세요
             </p>
           </div>
-          <button className="add-manual-button" onClick={() => setShowAddModal(true)}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            직접 등록
-          </button>
+          <div className="header-buttons">
+            <button className="notification-settings-button" onClick={() => setShowNotificationModal(true)}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              알림 설정
+            </button>
+            <button className="add-manual-button" onClick={() => setShowAddModal(true)}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              직접 등록
+            </button>
+          </div>
         </div>
       </div>
 
@@ -668,6 +719,77 @@ function WishlistPage() {
                 disabled={isAddingItem}
               >
                 {isAddingItem ? '등록 중...' : '등록하기'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 알림 설정 모달 */}
+      {showNotificationModal && (
+        <div className="add-modal-overlay" onClick={() => setShowNotificationModal(false)}>
+          <div className="add-modal notification-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="add-modal-header">
+              <h3>이메일 알림 설정</h3>
+              <button className="close-button" onClick={() => setShowNotificationModal(false)}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="add-modal-content">
+              <p className="notification-description">
+                관심상품의 가격이 변동되면 이메일로 알림을 받을 수 있습니다.
+              </p>
+
+              <div className="form-group">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={emailEnabled}
+                    onChange={(e) => setEmailEnabled(e.target.checked)}
+                  />
+                  <span>이메일 알림 받기</span>
+                </label>
+              </div>
+
+              <div className="form-group">
+                <label>알림 수신 이메일</label>
+                <input
+                  type="email"
+                  value={notificationEmail}
+                  onChange={(e) => setNotificationEmail(e.target.value)}
+                  placeholder="example@email.com"
+                  className="email-input"
+                  disabled={!emailEnabled}
+                />
+              </div>
+
+              <div className="notification-conditions">
+                <h4>알림 조건</h4>
+                <ul>
+                  <li>90일 최저가 도달 시</li>
+                  <li>설정한 목표가 도달 시</li>
+                  <li>가격 하락률 조건 충족 시</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="add-modal-actions">
+              <button
+                className="cancel-button"
+                onClick={() => setShowNotificationModal(false)}
+              >
+                취소
+              </button>
+              <button
+                className="submit-button"
+                onClick={handleSaveNotificationSettings}
+                disabled={isSavingNotification || (emailEnabled && !notificationEmail)}
+              >
+                {isSavingNotification ? '저장 중...' : '저장'}
               </button>
             </div>
           </div>

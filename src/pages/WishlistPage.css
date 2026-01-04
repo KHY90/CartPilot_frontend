@@ -54,6 +54,107 @@
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
+/* 헤더 버튼 그룹 */
+.header-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+/* 알림 설정 버튼 */
+.notification-settings-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: transparent;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: #ccc;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.notification-settings-button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #667eea;
+  color: white;
+}
+
+/* 알림 설정 모달 스타일 */
+.notification-modal {
+  max-width: 450px;
+}
+
+.notification-description {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: white;
+  font-size: 14px;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #667eea;
+  cursor: pointer;
+}
+
+.email-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: #1a1a2e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.email-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.email-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.notification-conditions {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.notification-conditions h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.notification-conditions ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #aaa;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
 /* 로딩 */
 .wishlist-loading {
   display: flex;

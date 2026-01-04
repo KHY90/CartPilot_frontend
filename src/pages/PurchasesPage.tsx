@@ -70,11 +70,14 @@ function PurchasesPage() {
   const loadData = async () => {
     setIsLoading(true);
     try {
+      console.log('구매 기록 로드 시작...');
       const [purchaseData, statsData, categoryData] = await Promise.all([
         getPurchases(50, 0, selectedCategory || undefined),
         getPurchaseStats(),
         getCategories(),
       ]);
+      console.log('구매 기록 로드 완료:', purchaseData.length, '개');
+      console.log('구매 기록 상세:', purchaseData);
       setPurchases(purchaseData);
       setStats(statsData);
       setCategories(categoryData);
@@ -88,10 +91,19 @@ function PurchasesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      console.log('구매 기록 저장 시도:', formData);
       const newPurchase = await createPurchase({
         ...formData,
         purchased_at: new Date(formData.purchased_at).toISOString(),
       });
+      console.log('구매 기록 저장 성공:', newPurchase);
+
+      if (!newPurchase.id) {
+        console.error('저장된 구매 기록에 ID가 없습니다:', newPurchase);
+        alert('구매 기록 저장에 문제가 발생했습니다.');
+        return;
+      }
+
       setPurchases([newPurchase, ...purchases]);
       setShowForm(false);
       setFormData({
@@ -106,6 +118,7 @@ function PurchasesPage() {
       loadData(); // 통계 갱신
     } catch (error) {
       console.error('구매 기록 저장 실패:', error);
+      alert('구매 기록 저장에 실패했습니다. 다시 시도해 주세요.');
     }
   };
 
@@ -186,13 +199,29 @@ function PurchasesPage() {
 
     try {
       const sessionId = localStorage.getItem('cartpilot_last_session_id');
-      if (!sessionId) {
-        setSearchResultsError('최근 검색 기록이 없습니다. 먼저 상품을 검색해 주세요.');
+
+      // 1. 먼저 백엔드 캐시에서 조회 시도
+      if (sessionId) {
+        try {
+          const results = await getCachedSearchResults(sessionId);
+          setSearchResults(results.products);
+          return;
+        } catch {
+          // 백엔드 캐시 실패 시 localStorage fallback으로 진행
+          console.log('백엔드 캐시 없음, localStorage에서 조회');
+        }
+      }
+
+      // 2. localStorage에서 검색 결과 조회 (fallback)
+      const localResults = localStorage.getItem('cartpilot_search_results');
+      if (localResults) {
+        const parsed = JSON.parse(localResults);
+        setSearchResults(parsed);
         return;
       }
 
-      const results = await getCachedSearchResults(sessionId);
-      setSearchResults(results.products);
+      // 3. 둘 다 없으면 에러
+      setSearchResultsError('최근 검색 기록이 없습니다. 먼저 상품을 검색해 주세요.');
     } catch (error) {
       setSearchResultsError('검색 결과를 불러올 수 없습니다. 먼저 상품을 검색해 주세요.');
       console.error(error);
