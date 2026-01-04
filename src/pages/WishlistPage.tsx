@@ -73,7 +73,7 @@ function WishlistPage() {
 
   // 알림 설정 모달 상태
   const [showNotificationModal, setShowNotificationModal] = useState(false);
-  const [notificationSettings, setNotificationSettings] = useState<NotificationSettings | null>(null);
+  const [, setNotificationSettings] = useState<NotificationSettings | null>(null);
   const [notificationEmail, setNotificationEmail] = useState('');
   const [emailEnabled, setEmailEnabled] = useState(true);
   const [isSavingNotification, setIsSavingNotification] = useState(false);
