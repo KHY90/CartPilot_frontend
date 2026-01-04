@@ -21,7 +21,12 @@ import {
   updateNotificationSettings,
   NotificationSettings,
 } from '../services/notificationApi';
+import {
+  rateProduct,
+  getRatingForProduct,
+} from '../services/ratingsApi';
 import PriceHistoryChart from '../components/PriceHistoryChart/PriceHistoryChart';
+import StarRating from '../components/common/StarRating';
 import './WishlistPage.css';
 
 // 카테고리 목록
@@ -73,6 +78,9 @@ function WishlistPage() {
   const [emailEnabled, setEmailEnabled] = useState(true);
   const [isSavingNotification, setIsSavingNotification] = useState(false);
 
+  // 별점 상태
+  const [ratings, setRatings] = useState<Record<string, number>>({});
+
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login');
@@ -105,6 +113,39 @@ function WishlistPage() {
       setEmailEnabled(settings.email_notification_enabled);
     } catch (err) {
       console.error('알림 설정 로드 실패:', err);
+    }
+  };
+
+  // 별점 로드
+  const loadRatings = async (wishlistItems: WishlistItem[]) => {
+    const newRatings: Record<string, number> = {};
+
+    for (const item of wishlistItems) {
+      try {
+        const rating = await getRatingForProduct(item.product_id);
+        if (rating) {
+          newRatings[item.product_id] = rating.rating;
+        }
+      } catch {
+        // 별점이 없는 경우 무시
+      }
+    }
+
+    setRatings(newRatings);
+  };
+
+  // 별점 저장
+  const handleRate = async (item: WishlistItem, newRating: number) => {
+    try {
+      await rateProduct({
+        product_id: item.product_id,
+        product_name: item.product_name,
+        price: item.current_price,
+        rating: newRating,
+      });
+      setRatings((prev) => ({ ...prev, [item.product_id]: newRating }));
+    } catch (err) {
+      console.error('별점 저장 실패:', err);
     }
   };
 
@@ -281,10 +322,11 @@ function WishlistPage() {
     }
   };
 
-  // 아이템 로드 후 가격 분석 데이터도 로드
+  // 아이템 로드 후 가격 분석 데이터 및 별점 로드
   useEffect(() => {
     if (items.length > 0) {
       items.forEach((item) => loadPriceAnalysis(item.id));
+      loadRatings(items);
     }
   }, [items.length]);
 
@@ -494,6 +536,23 @@ function WishlistPage() {
                         </span>
                       </div>
                     )}
+                  </div>
+
+                  {/* 별점 섹션 */}
+                  <div className="rating-section">
+                    <span className="rating-label">내 평점</span>
+                    <div className="rating-content">
+                      <StarRating
+                        rating={ratings[item.product_id] || 0}
+                        onRate={(newRating) => handleRate(item, newRating)}
+                        size="small"
+                      />
+                      {ratings[item.product_id] ? (
+                        <span className="rating-value">{ratings[item.product_id]}점</span>
+                      ) : (
+                        <span className="rating-placeholder">평점을 남겨주세요</span>
+                      )}
+                    </div>
                   </div>
 
                   <div className="card-meta">
