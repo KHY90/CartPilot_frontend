@@ -44,7 +44,7 @@ const CATEGORIES = [
 ];
 
 function WishlistPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const navigate = useNavigate();
 
   const [items, setItems] = useState<WishlistItem[]>([]);
@@ -82,13 +82,15 @@ function WishlistPage() {
   const [ratings, setRatings] = useState<Record<string, number>>({});
 
   useEffect(() => {
+    if (isAuthLoading) return; // 인증 상태 확인 중이면 대기
+
     if (!isAuthenticated) {
       navigate('/login');
       return;
     }
     loadWishlist();
     loadNotificationSettings();
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, isAuthLoading, navigate]);
 
   const loadWishlist = async () => {
     setIsLoading(true);
@@ -343,12 +345,12 @@ function WishlistPage() {
     }
   };
 
-  if (isLoading) {
+  if (isAuthLoading || isLoading) {
     return (
       <div className="wishlist-page">
         <div className="wishlist-loading">
           <div className="spinner" />
-          <p>관심상품 불러오는 중...</p>
+          <p>{isAuthLoading ? '인증 확인 중...' : '관심상품 불러오는 중...'}</p>
         </div>
       </div>
     );
