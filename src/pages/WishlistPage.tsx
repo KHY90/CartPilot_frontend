@@ -455,38 +455,52 @@ function WishlistPage() {
                     <div className="price-analysis-section">
                       <div className="analysis-header">
                         <span className="analysis-title">가격 분석</span>
-                        <span className={`recommendation-badge ${getRecommendationBadge(priceAnalyses[item.id].recommendation).className}`}>
-                          {getRecommendationBadge(priceAnalyses[item.id].recommendation).text}
-                        </span>
-                      </div>
-
-                      <div className="analysis-stats">
-                        {priceAnalyses[item.id].highest_90days && (
-                          <div className="analysis-stat">
-                            <span className="stat-label">90일 최고</span>
-                            <span className="stat-value high">{formatPrice(priceAnalyses[item.id].highest_90days!)}</span>
-                          </div>
-                        )}
-                        {priceAnalyses[item.id].average_90days && (
-                          <div className="analysis-stat">
-                            <span className="stat-label">90일 평균</span>
-                            <span className="stat-value">{formatPrice(priceAnalyses[item.id].average_90days!)}</span>
-                          </div>
-                        )}
-                        {priceAnalyses[item.id].price_change_percent !== undefined && (
-                          <div className="analysis-stat">
-                            <span className="stat-label">변동률</span>
-                            <span className={`stat-value ${priceAnalyses[item.id].price_change_percent! < 0 ? 'down' : 'up'}`}>
-                              {priceAnalyses[item.id].price_change_percent! > 0 ? '+' : ''}
-                              {priceAnalyses[item.id].price_change_percent!.toFixed(1)}%
-                            </span>
-                          </div>
+                        {priceAnalyses[item.id].data_points >= 7 ? (
+                          <span className={`recommendation-badge ${getRecommendationBadge(priceAnalyses[item.id].recommendation).className}`}>
+                            {getRecommendationBadge(priceAnalyses[item.id].recommendation).text}
+                          </span>
+                        ) : (
+                          <span className="recommendation-badge badge-insufficient">
+                            데이터 부족
+                          </span>
                         )}
                       </div>
 
-                      {priceAnalyses[item.id].is_lowest && (
-                        <div className="is-lowest-indicator">
-                          현재 90일 최저가입니다!
+                      {priceAnalyses[item.id].data_points >= 7 ? (
+                        <>
+                          <div className="analysis-stats">
+                            {priceAnalyses[item.id].highest_90days && (
+                              <div className="analysis-stat">
+                                <span className="stat-label">90일 최고</span>
+                                <span className="stat-value high">{formatPrice(priceAnalyses[item.id].highest_90days!)}</span>
+                              </div>
+                            )}
+                            {priceAnalyses[item.id].average_90days && (
+                              <div className="analysis-stat">
+                                <span className="stat-label">90일 평균</span>
+                                <span className="stat-value">{formatPrice(priceAnalyses[item.id].average_90days!)}</span>
+                              </div>
+                            )}
+                            {priceAnalyses[item.id].price_change_percent !== undefined && (
+                              <div className="analysis-stat">
+                                <span className="stat-label">변동률</span>
+                                <span className={`stat-value ${priceAnalyses[item.id].price_change_percent! < 0 ? 'down' : 'up'}`}>
+                                  {priceAnalyses[item.id].price_change_percent! > 0 ? '+' : ''}
+                                  {priceAnalyses[item.id].price_change_percent!.toFixed(1)}%
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          {priceAnalyses[item.id].is_lowest && (
+                            <div className="is-lowest-indicator">
+                              현재 90일 최저가입니다!
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="insufficient-data-message">
+                          가격 데이터가 부족합니다 ({priceAnalyses[item.id].data_points}일 / 7일 필요)
                         </div>
                       )}
                     </div>
