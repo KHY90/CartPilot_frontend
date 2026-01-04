@@ -129,6 +129,19 @@
   font-weight: 500;
 }
 
+/* Rating */
+.gift-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gift-card-rating .rating-text {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
 /* Reason */
 .gift-card-reason {
   display: flex;

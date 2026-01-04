@@ -6,7 +6,9 @@ import { useState, useEffect } from 'react';
 import { RecommendationCard } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
 import WishlistButton from '../common/WishlistButton';
+import StarRating from '../common/StarRating';
 import { addToWishlist, removeFromWishlist, getWishlist } from '../../services/wishlistApi';
+import { rateProduct, getRatingForProduct } from '../../services/ratingsApi';
 import './GiftCard.css';
 
 interface GiftCardProps {
@@ -18,16 +20,24 @@ function GiftCard({ card, index }: GiftCardProps) {
   const { isAuthenticated } = useAuth();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [wishlistItemId, setWishlistItemId] = useState<string | null>(null);
+  const [rating, setRating] = useState(0);
 
   // 초기 상태 로드
   useEffect(() => {
     if (isAuthenticated) {
-      loadWishlistStatus();
+      loadUserData();
     }
   }, [isAuthenticated, card.product_id]);
 
-  const loadWishlistStatus = async () => {
+  const loadUserData = async () => {
     try {
+      // 별점 로드
+      const existingRating = await getRatingForProduct(card.product_id);
+      if (existingRating) {
+        setRating(existingRating.rating);
+      }
+
+      // 관심상품 여부 확인
       const wishlist = await getWishlist();
       const item = wishlist.find((w) => w.product_id === card.product_id);
       if (item) {
@@ -36,6 +46,22 @@ function GiftCard({ card, index }: GiftCardProps) {
       }
     } catch {
       // 조용히 실패
+    }
+  };
+
+  const handleRate = async (newRating: number) => {
+    if (!isAuthenticated) return;
+
+    try {
+      await rateProduct({
+        product_id: card.product_id,
+        product_name: card.title,
+        price: card.price,
+        rating: newRating,
+      });
+      setRating(newRating);
+    } catch {
+      // 에러 처리
     }
   };
 
@@ -99,6 +125,13 @@ function GiftCard({ card, index }: GiftCardProps) {
           <span className="price">{card.price_display}</span>
           <span className="mall">{card.mall_name}</span>
         </div>
+
+        {isAuthenticated && (
+          <div className="gift-card-rating">
+            <StarRating rating={rating} onRate={handleRate} size="small" />
+            {rating > 0 && <span className="rating-text">{rating}점</span>}
+          </div>
+        )}
 
         <div className="gift-card-reason">
           <svg className="reason-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

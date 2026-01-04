@@ -16,7 +16,9 @@ import {
 import { useAuth } from '../../contexts/AuthContext';
 import GiftCard from './GiftCard';
 import WishlistButton from '../common/WishlistButton';
+import StarRating from '../common/StarRating';
 import { addToWishlist, removeFromWishlist, getWishlist, WishlistItem } from '../../services/wishlistApi';
+import { rateProduct, getRatingForProduct } from '../../services/ratingsApi';
 import SearchProgress from '../common/SearchProgress';
 import './RecommendationPanel.css';
 
@@ -491,21 +493,29 @@ function GiftRecommendationWithPaging({ recommendation }: { recommendation: Gift
   );
 }
 
-// VALUE 모드용 카드 컴포넌트 (관심상품 기능 포함)
+// VALUE 모드용 카드 컴포넌트 (관심상품, 별점 기능 포함)
 function ValueCard({ card }: { card: RecommendationCard }) {
   const { isAuthenticated } = useAuth();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [wishlistItemId, setWishlistItemId] = useState<string | null>(null);
+  const [rating, setRating] = useState(0);
 
   // 초기 상태 로드
   useEffect(() => {
     if (isAuthenticated) {
-      loadWishlistStatus();
+      loadUserData();
     }
   }, [isAuthenticated, card.product_id]);
 
-  const loadWishlistStatus = async () => {
+  const loadUserData = async () => {
     try {
+      // 별점 로드
+      const existingRating = await getRatingForProduct(card.product_id);
+      if (existingRating) {
+        setRating(existingRating.rating);
+      }
+
+      // 관심상품 여부 확인
       const wishlist = await getWishlist();
       const item = wishlist.find((w: WishlistItem) => w.product_id === card.product_id);
       if (item) {
@@ -514,6 +524,22 @@ function ValueCard({ card }: { card: RecommendationCard }) {
       }
     } catch {
       // 조용히 실패
+    }
+  };
+
+  const handleRate = async (newRating: number) => {
+    if (!isAuthenticated) return;
+
+    try {
+      await rateProduct({
+        product_id: card.product_id,
+        product_name: card.title,
+        price: card.price,
+        rating: newRating,
+      });
+      setRating(newRating);
+    } catch {
+      // 에러 처리
     }
   };
 
@@ -569,6 +595,12 @@ function ValueCard({ card }: { card: RecommendationCard }) {
           </div>
         )}
       </div>
+      {isAuthenticated && (
+        <div className="value-card-rating">
+          <StarRating rating={rating} onRate={handleRate} size="small" />
+          {rating > 0 && <span className="rating-text">{rating}점</span>}
+        </div>
+      )}
       <div className="card-details">
         <p className="recommendation-reason">{card.recommendation_reason}</p>
         {card.tier_benefits && (

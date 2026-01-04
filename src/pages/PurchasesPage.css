@@ -100,10 +100,10 @@
   color: var(--color-text-muted);
 }
 
-.stat-value {
-  font-size: 24px !important;
-  font-weight: 700 !important;
-  color: #1a1a1a !important;
+.purchases-page .stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
 }
 
 /* 카테고리 필터 */
