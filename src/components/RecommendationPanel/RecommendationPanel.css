@@ -335,12 +335,23 @@
   box-shadow: var(--shadow-md);
 }
 
+.value-card .card-link-wrapper {
+  position: relative;
+}
+
 .value-card .card-link {
   display: flex;
   gap: 16px;
   padding: 16px;
   text-decoration: none;
   color: inherit;
+}
+
+.value-card-wishlist {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
 }
 
 .value-card .card-image {

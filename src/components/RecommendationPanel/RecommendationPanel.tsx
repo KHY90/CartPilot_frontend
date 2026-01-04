@@ -13,7 +13,10 @@ import {
   RecommendationCard,
   IntentType
 } from '../../types';
+import { useAuth } from '../../contexts/AuthContext';
 import GiftCard from './GiftCard';
+import WishlistButton from '../common/WishlistButton';
+import { addToWishlist, removeFromWishlist, getWishlist, WishlistItem } from '../../services/wishlistApi';
 import SearchProgress from '../common/SearchProgress';
 import './RecommendationPanel.css';
 
@@ -488,24 +491,84 @@ function GiftRecommendationWithPaging({ recommendation }: { recommendation: Gift
   );
 }
 
-// VALUE 모드용 카드 컴포넌트
+// VALUE 모드용 카드 컴포넌트 (관심상품 기능 포함)
 function ValueCard({ card }: { card: RecommendationCard }) {
+  const { isAuthenticated } = useAuth();
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [wishlistItemId, setWishlistItemId] = useState<string | null>(null);
+
+  // 초기 상태 로드
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadWishlistStatus();
+    }
+  }, [isAuthenticated, card.product_id]);
+
+  const loadWishlistStatus = async () => {
+    try {
+      const wishlist = await getWishlist();
+      const item = wishlist.find((w: WishlistItem) => w.product_id === card.product_id);
+      if (item) {
+        setIsWishlisted(true);
+        setWishlistItemId(item.id);
+      }
+    } catch {
+      // 조용히 실패
+    }
+  };
+
+  const handleWishlistToggle = async () => {
+    if (!isAuthenticated) return;
+
+    try {
+      if (isWishlisted && wishlistItemId) {
+        await removeFromWishlist(wishlistItemId);
+        setIsWishlisted(false);
+        setWishlistItemId(null);
+      } else {
+        const item = await addToWishlist({
+          product_id: card.product_id,
+          product_name: card.title,
+          product_image: card.image,
+          product_link: card.link,
+          mall_name: card.mall_name,
+          current_price: card.price,
+        });
+        setIsWishlisted(true);
+        setWishlistItemId(item.id);
+      }
+    } catch {
+      // 에러 처리
+    }
+  };
+
   return (
     <div className="value-card">
-      <a href={card.link} target="_blank" rel="noopener noreferrer" className="card-link">
-        <div className="card-image">
-          {card.image ? (
-            <img src={card.image} alt={card.title} loading="lazy" />
-          ) : (
-            <div className="no-image">이미지 없음</div>
-          )}
-        </div>
-        <div className="card-content">
-          <h4 className="card-title">{card.title}</h4>
-          <p className="card-price">{card.price_display}</p>
-          <p className="card-mall">{card.mall_name}</p>
-        </div>
-      </a>
+      <div className="card-link-wrapper">
+        <a href={card.link} target="_blank" rel="noopener noreferrer" className="card-link">
+          <div className="card-image">
+            {card.image ? (
+              <img src={card.image} alt={card.title} loading="lazy" />
+            ) : (
+              <div className="no-image">이미지 없음</div>
+            )}
+          </div>
+          <div className="card-content">
+            <h4 className="card-title">{card.title}</h4>
+            <p className="card-price">{card.price_display}</p>
+            <p className="card-mall">{card.mall_name}</p>
+          </div>
+        </a>
+        {isAuthenticated && (
+          <div className="value-card-wishlist">
+            <WishlistButton
+              isWishlisted={isWishlisted}
+              onToggle={handleWishlistToggle}
+              size="medium"
+            />
+          </div>
+        )}
+      </div>
       <div className="card-details">
         <p className="recommendation-reason">{card.recommendation_reason}</p>
         {card.tier_benefits && (

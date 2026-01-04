@@ -76,6 +76,11 @@
   transition: transform var(--transition-slow);
 }
 
+.gift-card-no-image {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
 .gift-card:hover .gift-card-image img {
   transform: scale(1.03);
 }

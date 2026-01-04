@@ -79,17 +79,50 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       }
 
       // 추천 결과가 있으면 localStorage에도 저장 (백엔드 캐시 fallback용)
-      if (response.type === 'recommendation' && response.recommendation?.cards) {
-        const searchResults = response.recommendation.cards.map((card) => ({
-          product_id: card.product_id,
-          title: card.title,
-          price: card.price,
-          price_display: card.price_display,
-          mall_name: card.mall_name,
-          link: card.link,
-          image: card.image,
-        }));
-        localStorage.setItem('cartpilot_search_results', JSON.stringify(searchResults));
+      if (response.type === 'recommendation' && response.recommendations) {
+        const recs = response.recommendations;
+        let allCards: Array<{
+          product_id: string;
+          title: string;
+          price: number;
+          price_display: string;
+          mall_name: string;
+          link: string;
+          image?: string;
+        }> = [];
+
+        // GIFT 모드: cards 속성 사용
+        if ('cards' in recs && Array.isArray(recs.cards)) {
+          allCards = recs.cards.map((card) => ({
+            product_id: card.product_id,
+            title: card.title,
+            price: card.price,
+            price_display: card.price_display,
+            mall_name: card.mall_name,
+            link: card.link,
+            image: card.image,
+          }));
+        }
+        // VALUE 모드: budget_tier, standard_tier, premium_tier 사용
+        else if ('budget_tier' in recs) {
+          const budgetCards = recs.budget_tier || [];
+          const standardCards = recs.standard_tier || [];
+          const premiumCards = recs.premium_tier || [];
+          allCards = [...budgetCards, ...standardCards, ...premiumCards].map((card) => ({
+            product_id: card.product_id,
+            title: card.title,
+            price: card.price,
+            price_display: card.price_display,
+            mall_name: card.mall_name,
+            link: card.link,
+            image: card.image,
+          }));
+        }
+
+        if (allCards.length > 0) {
+          localStorage.setItem('cartpilot_search_results', JSON.stringify(allCards));
+          console.log('검색 결과 localStorage 저장:', allCards.length, '개 상품');
+        }
       }
 
       setState((prev) => ({

@@ -75,20 +75,22 @@ function GiftCard({ card, index }: GiftCardProps) {
     <div className="gift-card">
       <div className={`gift-card-rank ${rankClass}`}>#{index + 1}</div>
 
-      {card.image && (
-        <div className="gift-card-image">
+      <div className="gift-card-image">
+        {card.image ? (
           <img src={card.image} alt={card.title} loading="lazy" />
-          {isAuthenticated && (
-            <div className="gift-card-wishlist">
-              <WishlistButton
-                isWishlisted={isWishlisted}
-                onToggle={handleWishlistToggle}
-                size="medium"
-              />
-            </div>
-          )}
-        </div>
-      )}
+        ) : (
+          <div className="gift-card-no-image">이미지 없음</div>
+        )}
+        {isAuthenticated && (
+          <div className="gift-card-wishlist">
+            <WishlistButton
+              isWishlisted={isWishlisted}
+              onToggle={handleWishlistToggle}
+              size="medium"
+            />
+          </div>
+        )}
+      </div>
 
       <div className="gift-card-content">
         <h3 className="gift-card-title">{card.title}</h3>
