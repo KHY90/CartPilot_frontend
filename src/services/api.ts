@@ -32,7 +32,7 @@ const processQueue = (error: unknown, token: string | null = null) => {
 // Axios 인스턴스 생성
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000, // 30초 (8초 응답 목표 + 여유)
+  timeout: 50000, // 50초 (검증 에이전트 추가로 처리 시간 증가)
   headers: {
     'Content-Type': 'application/json',
   },
