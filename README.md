@@ -165,22 +165,6 @@ docker run -p 3000:3000 cartpilot-frontend
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 ```
 
-### Vite 설정
-
-`vite.config.ts`:
-
-```typescript
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    port: 3000,
-    proxy: {
-      '/api': 'http://localhost:8000'
-    }
-  }
-});
-```
-
 ## 인증 플로우
 
 ```
@@ -203,66 +187,6 @@ export default defineConfig({
 - **Access Token**: localStorage 저장, API 요청 헤더에 포함
 - **Refresh Token**: HTTP-only 쿠키 (백엔드 관리)
 - **자동 갱신**: Access Token 만료 시 자동 갱신
-
-## 타입 정의
-
-### 주요 인터페이스
-
-```typescript
-// 의도 유형
-type IntentType = 'GIFT' | 'VALUE' | 'BUNDLE' | 'REVIEW' | 'TREND';
-
-// 사용자
-interface User {
-  id: string;
-  email: string | null;
-  name: string | null;
-  profile_image: string | null;
-  provider: 'kakao' | 'naver';
-}
-
-// 관심상품
-interface WishlistItem {
-  id: string;
-  product_id: string;
-  product_name: string;
-  product_image: string | null;
-  current_price: number;
-  target_price: number | null;
-  lowest_price_90days: number | null;
-  notification_enabled: boolean;
-  alert_on_lowest: boolean;
-  alert_on_target: boolean;
-}
-
-// 가격 이력
-interface PriceHistory {
-  price: number;
-  recorded_at: string;
-}
-
-// 추천 카드 (공통)
-interface RecommendationCard {
-  product_id: string;
-  title: string;
-  image?: string;
-  price: number;
-  price_display: string;
-  mall_name: string;
-  link: string;
-  recommendation_reason: string;
-  warnings: string[];
-}
-
-// 채팅 응답
-interface ChatResponse {
-  type: 'recommendation' | 'clarification' | 'error';
-  intent?: IntentType;
-  recommendations?: GiftRecommendation | ValueRecommendation | ...;
-  processing_time_ms: number;
-  cached: boolean;
-}
-```
 
 ## 컴포넌트 구조
 
@@ -327,44 +251,21 @@ CSS Variables를 사용한 테마 시스템:
 }
 ```
 
-## API 서비스
+## API 설정
 
-### authApi.ts
+### 타임아웃
+- API 요청 타임아웃: **50초** (검증 에이전트 추가로 처리 시간 증가)
+- 검증 에이전트가 추천 결과를 검증하고 필요시 재검색하므로 기존 30초에서 증가
+
+### 검증 피드백
+백엔드의 검증 에이전트가 적합 상품이 제한적일 때 `validation_feedback` 메시지를 반환합니다:
 ```typescript
-// 소셜 로그인 URL
-getKakaoLoginUrl(): string
-getNaverLoginUrl(): string
-
-// 토큰 관리
-refreshToken(): Promise<TokenResponse>
-logout(): Promise<void>
-
-// 사용자 정보
-getMe(): Promise<User>
-```
-
-### wishlistApi.ts
-```typescript
-// CRUD
-getWishlist(): Promise<WishlistItem[]>
-addToWishlist(item: CreateWishlistRequest): Promise<WishlistItem>
-updateWishlist(id: string, data: UpdateWishlistRequest): Promise<WishlistItem>
-removeFromWishlist(id: string): Promise<void>
-
-// 가격 관련
-getPriceHistory(id: string, days?: number): Promise<PriceHistory[]>
-getPriceAnalysis(id: string): Promise<PriceAnalysis>
-checkPriceNow(id: string): Promise<PriceCheckResult>
-```
-
-### ratingsApi.ts
-```typescript
-getRatings(): Promise<Rating[]>
-addRating(data: CreateRatingRequest): Promise<Rating>
-```
-
-### purchasesApi.ts
-```typescript
-getPurchases(): Promise<Purchase[]>
-addPurchase(data: CreatePurchaseRequest): Promise<Purchase>
+// 예시 응답
+{
+  type: 'recommendation',
+  intent: 'VALUE',
+  recommendations: { ... },
+  validation_feedback: "요청에 맞는 상품이 3개로 제한적입니다.",
+  processing_time_ms: 35000
+}
 ```
