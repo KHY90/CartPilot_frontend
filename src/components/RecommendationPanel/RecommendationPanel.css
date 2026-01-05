@@ -507,6 +507,14 @@
   align-items: center;
   padding: 12px 16px;
   background-color: var(--color-bg-secondary);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.combo-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .combo-badge {
@@ -518,6 +526,18 @@
 .combo-total {
   font-weight: 700;
   font-size: 15px;
+}
+
+.combo-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.combo-rating .rating-text {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
 .combo-total.fit {
@@ -534,6 +554,84 @@
   font-size: 13px;
   color: var(--color-text-secondary);
   background-color: #fef3c7;
+}
+
+.combo-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 조합 관심상품 섹션 */
+.combo-wishlist-section {
+  padding: 12px 16px;
+  background-color: var(--color-bg-tertiary, #f8f9fa);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.combo-wishlist-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.combo-wishlist-btn:hover:not(:disabled) {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  color: #ef4444;
+}
+
+.combo-wishlist-btn:hover:not(:disabled) svg {
+  stroke: #ef4444;
+}
+
+.combo-wishlist-btn.added {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  color: #ef4444;
+}
+
+.combo-wishlist-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.wishlist-message {
+  font-size: 12px;
+  color: var(--color-success, #16a34a);
+  font-weight: 500;
+}
+
+/* 개별 아이템 헤더 */
+.bundle-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.bundle-item-header .item-category {
+  margin: 0;
+}
+
+.item-wishlisted {
+  display: flex;
+  align-items: center;
+  color: #ef4444;
 }
 
 .combo-items {

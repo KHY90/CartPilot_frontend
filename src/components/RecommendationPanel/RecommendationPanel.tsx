@@ -8,6 +8,7 @@ import {
   GiftRecommendation,
   ValueRecommendation,
   BundleRecommendation,
+  BundleCombination,
   ReviewAnalysis,
   TrendSignal,
   RecommendationCard,
@@ -19,6 +20,7 @@ import WishlistButton from '../common/WishlistButton';
 import StarRating from '../common/StarRating';
 import { addToWishlist, removeFromWishlist, getWishlist, WishlistItem } from '../../services/wishlistApi';
 import { rateProduct, getRatingForProduct } from '../../services/ratingsApi';
+import { rateCombination, getCombinationRatingByProducts } from '../../services/combinationRatingsApi';
 import SearchProgress from '../common/SearchProgress';
 import './RecommendationPanel.css';
 
@@ -230,54 +232,7 @@ function renderRecommendations(
   // BUNDLE 모드
   if (intent === 'BUNDLE' && 'combinations' in recommendations) {
     const bundleRec = recommendations as BundleRecommendation;
-    return (
-      <div className="bundle-recommendations">
-        <div className="rec-summary">
-          <div className="summary-header">
-            <span className="bundle-icon">📦</span>
-            <div>
-              <p className="category">
-                <strong>{bundleRec.items_count}개 품목</strong> 묶음 구매
-              </p>
-              <p className="budget-info">예산: {bundleRec.total_budget.toLocaleString()}원</p>
-            </div>
-          </div>
-        </div>
-
-        {bundleRec.combinations.map((combo) => (
-          <div key={combo.combination_id} className={`bundle-combo ${combo.budget_fit ? 'fit' : 'over'}`}>
-            <div className="combo-header">
-              <span className="combo-badge">조합 {combo.combination_id}</span>
-              <span className={`combo-total ${combo.budget_fit ? 'fit' : 'over'}`}>
-                {combo.total_display}
-                {!combo.budget_fit && ' (예산 초과)'}
-              </span>
-            </div>
-            {combo.adjustment_note && (
-              <p className="adjustment-note">💡 {combo.adjustment_note}</p>
-            )}
-            <div className="combo-items">
-              {combo.items.map((item) => (
-                <div key={item.item_category} className="bundle-item">
-                  <p className="item-category">{item.item_category}</p>
-                  <BundleProductCard card={item.product} />
-                  {item.alternatives.length > 0 && (
-                    <div className="alternatives">
-                      <p className="alt-label">대체 옵션:</p>
-                      {item.alternatives.map((alt) => (
-                        <a key={alt.product_id} href={alt.link} target="_blank" rel="noopener noreferrer" className="alt-item">
-                          {alt.title.slice(0, 30)}... - {alt.price_display}
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+    return <BundleRecommendationView recommendation={bundleRec} />;
   }
 
   // REVIEW 모드
@@ -620,6 +575,292 @@ function ValueCard({ card }: { card: RecommendationCard }) {
             ))}
           </ul>
         )}
+      </div>
+    </div>
+  );
+}
+
+// BUNDLE 모드 전체 뷰 컴포넌트
+function BundleRecommendationView({ recommendation }: { recommendation: BundleRecommendation }) {
+  return (
+    <div className="bundle-recommendations">
+      <div className="rec-summary">
+        <div className="summary-header">
+          <span className="bundle-icon">📦</span>
+          <div>
+            <p className="category">
+              <strong>{recommendation.items_count}개 품목</strong> 묶음 구매
+            </p>
+            <p className="budget-info">예산: {recommendation.total_budget.toLocaleString()}원</p>
+          </div>
+        </div>
+      </div>
+
+      {recommendation.combinations.map((combo) => (
+        <BundleCombinationCard key={combo.combination_id} combo={combo} />
+      ))}
+    </div>
+  );
+}
+
+// BUNDLE 모드 조합 카드 컴포넌트 (별점 + 관심상품 기능 포함)
+function BundleCombinationCard({ combo }: { combo: BundleCombination }) {
+  const { isAuthenticated } = useAuth();
+  const [rating, setRating] = useState(0);
+  const [isLoadingRating, setIsLoadingRating] = useState(false);
+  const [wishlistStatus, setWishlistStatus] = useState<Record<string, string | null>>({});
+  const [isAddingToWishlist, setIsAddingToWishlist] = useState(false);
+  const [wishlistMessage, setWishlistMessage] = useState<string | null>(null);
+
+  // 조합 내 모든 상품 ID 추출
+  const productIds = combo.items.map(item => item.product.product_id);
+  const productNames = combo.items.map(item => item.product.title);
+  const itemCategories = combo.items.map(item => item.item_category);
+
+  // 기존 별점 및 관심상품 상태 로드
+  useEffect(() => {
+    if (isAuthenticated && productIds.length > 0) {
+      loadExistingRating();
+      loadWishlistStatus();
+    }
+  }, [isAuthenticated, combo.combination_id]);
+
+  const loadExistingRating = async () => {
+    try {
+      const existingRating = await getCombinationRatingByProducts(productIds);
+      if (existingRating) {
+        setRating(existingRating.rating);
+      }
+    } catch {
+      // 조용히 실패
+    }
+  };
+
+  const loadWishlistStatus = async () => {
+    try {
+      const wishlist = await getWishlist();
+      const status: Record<string, string | null> = {};
+      combo.items.forEach(item => {
+        const found = wishlist.find((w: WishlistItem) => w.product_id === item.product.product_id);
+        status[item.product.product_id] = found ? found.id : null;
+      });
+      setWishlistStatus(status);
+    } catch {
+      // 조용히 실패
+    }
+  };
+
+  const handleRate = async (newRating: number) => {
+    if (!isAuthenticated || isLoadingRating) return;
+
+    setIsLoadingRating(true);
+    try {
+      await rateCombination({
+        combination_id: combo.combination_id,
+        product_ids: productIds,
+        product_names: productNames,
+        total_price: combo.total_price,
+        item_categories: itemCategories,
+        rating: newRating,
+      });
+      setRating(newRating);
+    } catch {
+      // 에러 처리
+    } finally {
+      setIsLoadingRating(false);
+    }
+  };
+
+  // 조합 전체를 관심상품에 추가
+  const handleAddComboToWishlist = async () => {
+    if (!isAuthenticated || isAddingToWishlist) return;
+
+    setIsAddingToWishlist(true);
+    setWishlistMessage(null);
+
+    try {
+      let addedCount = 0;
+      let skippedCount = 0;
+
+      for (const item of combo.items) {
+        const product = item.product;
+        // 이미 관심상품에 있으면 건너뛰기
+        if (wishlistStatus[product.product_id]) {
+          skippedCount++;
+          continue;
+        }
+
+        try {
+          const wishlistItem = await addToWishlist({
+            product_id: product.product_id,
+            product_name: product.title,
+            product_image: product.image,
+            product_link: product.link,
+            mall_name: product.mall_name,
+            category: item.item_category,
+            current_price: product.price,
+          });
+          setWishlistStatus(prev => ({
+            ...prev,
+            [product.product_id]: wishlistItem.id,
+          }));
+          addedCount++;
+        } catch {
+          // 개별 상품 추가 실패는 무시하고 계속
+        }
+      }
+
+      if (addedCount > 0) {
+        setWishlistMessage(`${addedCount}개 상품이 관심상품에 추가되었습니다!`);
+      } else if (skippedCount > 0) {
+        setWishlistMessage('모든 상품이 이미 관심상품에 있습니다.');
+      }
+
+      // 3초 후 메시지 숨기기
+      setTimeout(() => setWishlistMessage(null), 3000);
+    } catch {
+      setWishlistMessage('관심상품 추가 중 오류가 발생했습니다.');
+      setTimeout(() => setWishlistMessage(null), 3000);
+    } finally {
+      setIsAddingToWishlist(false);
+    }
+  };
+
+  // 조합 전체를 관심상품에서 삭제
+  const handleRemoveComboFromWishlist = async () => {
+    if (!isAuthenticated || isAddingToWishlist) return;
+
+    setIsAddingToWishlist(true);
+    setWishlistMessage(null);
+
+    try {
+      let removedCount = 0;
+
+      for (const item of combo.items) {
+        const product = item.product;
+        const wishlistItemId = wishlistStatus[product.product_id];
+
+        if (!wishlistItemId) continue;
+
+        try {
+          await removeFromWishlist(wishlistItemId);
+          setWishlistStatus(prev => ({
+            ...prev,
+            [product.product_id]: null,
+          }));
+          removedCount++;
+        } catch {
+          // 개별 상품 삭제 실패는 무시하고 계속
+        }
+      }
+
+      if (removedCount > 0) {
+        setWishlistMessage(`${removedCount}개 상품이 관심상품에서 삭제되었습니다.`);
+      }
+
+      // 3초 후 메시지 숨기기
+      setTimeout(() => setWishlistMessage(null), 3000);
+    } catch {
+      setWishlistMessage('관심상품 삭제 중 오류가 발생했습니다.');
+      setTimeout(() => setWishlistMessage(null), 3000);
+    } finally {
+      setIsAddingToWishlist(false);
+    }
+  };
+
+  // 모든 상품이 이미 관심상품에 있는지 확인
+  const allInWishlist = combo.items.every(item => wishlistStatus[item.product.product_id]);
+
+  // 토글 핸들러
+  const handleWishlistToggle = () => {
+    if (allInWishlist) {
+      handleRemoveComboFromWishlist();
+    } else {
+      handleAddComboToWishlist();
+    }
+  };
+
+  return (
+    <div className={`bundle-combo ${combo.budget_fit ? 'fit' : 'over'}`}>
+      <div className="combo-header">
+        <div className="combo-header-left">
+          <span className="combo-badge">조합 {combo.combination_id}</span>
+          <span className={`combo-total ${combo.budget_fit ? 'fit' : 'over'}`}>
+            {combo.total_display}
+            {!combo.budget_fit && ' (예산 초과)'}
+          </span>
+        </div>
+        {isAuthenticated && (
+          <div className="combo-actions">
+            <div className="combo-rating">
+              <StarRating rating={rating} onRate={handleRate} size="small" />
+              {rating > 0 && <span className="rating-text">{rating}점</span>}
+            </div>
+          </div>
+        )}
+      </div>
+      {combo.adjustment_note && (
+        <p className="adjustment-note">💡 {combo.adjustment_note}</p>
+      )}
+
+      {/* 조합 관심상품 등록 버튼 */}
+      {isAuthenticated && (
+        <div className="combo-wishlist-section">
+          <button
+            className={`combo-wishlist-btn ${allInWishlist ? 'added' : ''}`}
+            onClick={handleWishlistToggle}
+            disabled={isAddingToWishlist}
+          >
+            {isAddingToWishlist ? (
+              '처리 중...'
+            ) : allInWishlist ? (
+              <>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                조합 관심상품 해제
+              </>
+            ) : (
+              <>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                조합 관심상품 등록
+              </>
+            )}
+          </button>
+          {wishlistMessage && (
+            <span className="wishlist-message">{wishlistMessage}</span>
+          )}
+        </div>
+      )}
+
+      <div className="combo-items">
+        {combo.items.map((item) => (
+          <div key={item.item_category} className="bundle-item">
+            <div className="bundle-item-header">
+              <p className="item-category">{item.item_category}</p>
+              {wishlistStatus[item.product.product_id] && (
+                <span className="item-wishlisted" title="관심상품에 등록됨">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#ef4444">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                </span>
+              )}
+            </div>
+            <BundleProductCard card={item.product} />
+            {item.alternatives.length > 0 && (
+              <div className="alternatives">
+                <p className="alt-label">대체 옵션:</p>
+                {item.alternatives.map((alt) => (
+                  <a key={alt.product_id} href={alt.link} target="_blank" rel="noopener noreferrer" className="alt-item">
+                    {alt.title.slice(0, 30)}... - {alt.price_display}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -195,3 +195,25 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
 }
+
+// ==================== 조합 별점 관련 타입 ====================
+export interface CombinationRating {
+  id: string;
+  combination_hash: string;
+  combination_id: string;
+  product_ids: string[];
+  product_names: string[];
+  total_price?: number;
+  item_categories: string[];
+  rating: number;
+  created_at: string;
+}
+
+export interface CombinationRatingCreate {
+  combination_id: string;
+  product_ids: string[];
+  product_names?: string[];
+  total_price?: number;
+  item_categories?: string[];
+  rating: number;
+}
