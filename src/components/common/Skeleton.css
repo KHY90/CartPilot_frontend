@@ -1,0 +1,36 @@
+/**
+ * Skeleton 컴포넌트 스타일
+ */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-secondary) 25%,
+    var(--color-border-light) 50%,
+    var(--color-bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-text {
+  height: 1em;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-circular {
+  border-radius: 50%;
+}
+
+.skeleton-rectangular {
+  border-radius: var(--radius);
+}

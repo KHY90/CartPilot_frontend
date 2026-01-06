@@ -15,6 +15,8 @@ import {
   IntentType
 } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../contexts/ToastContext';
+import { useCompare } from '../../contexts/CompareContext';
 import GiftCard from './GiftCard';
 import WishlistButton from '../common/WishlistButton';
 import StarRating from '../common/StarRating';
@@ -22,6 +24,7 @@ import { addToWishlist, removeFromWishlist, getWishlist, WishlistItem } from '..
 import { rateProduct, getRatingForProduct } from '../../services/ratingsApi';
 import { rateCombination, getCombinationRatingByProducts } from '../../services/combinationRatingsApi';
 import SearchProgress from '../common/SearchProgress';
+import PersonalizedSection from './PersonalizedSection';
 import './RecommendationPanel.css';
 
 interface RecommendationPanelProps {
@@ -117,6 +120,9 @@ function RecommendationPanel({ response, isLoading }: RecommendationPanelProps) 
             {response.cached ? '캐시' : `${response.processing_time_ms}ms`}
           </span>
         </div>
+
+        {/* 개인화 섹션 (로그인 시에만 표시) */}
+        <PersonalizedSection />
 
         {renderRecommendations(response.intent, response.recommendations)}
       </div>
@@ -238,6 +244,8 @@ function renderRecommendations(
   // REVIEW 모드
   if (intent === 'REVIEW' && 'top_complaints' in recommendations) {
     const reviewRec = recommendations as ReviewAnalysis;
+    const realInsights = reviewRec.real_review_insights;
+
     return (
       <div className="review-recommendations">
         <div className="rec-summary">
@@ -254,6 +262,83 @@ function renderRecommendations(
           </div>
         </div>
 
+        {/* 실제 리뷰 데이터 기반 인사이트 */}
+        {realInsights && realInsights.total_reviews_analyzed > 0 && (
+          <div className="real-review-insights">
+            <div className="insights-header">
+              <span className="insights-badge">실제 리뷰 {realInsights.total_reviews_analyzed}개 분석</span>
+              <span className="data-freshness">{realInsights.data_freshness}</span>
+            </div>
+
+            {/* 만족도 */}
+            {realInsights.average_satisfaction !== undefined && (
+              <div className="satisfaction-meter">
+                <span className="satisfaction-label">평균 만족도</span>
+                <div className="satisfaction-bar">
+                  <div
+                    className="satisfaction-fill"
+                    style={{ width: `${realInsights.average_satisfaction}%` }}
+                  />
+                </div>
+                <span className="satisfaction-value">{realInsights.average_satisfaction}%</span>
+              </div>
+            )}
+
+            {/* 실제 사용자 후기 */}
+            {realInsights.real_user_quotes && realInsights.real_user_quotes.length > 0 && (
+              <div className="user-quotes-section">
+                <h4>💬 실제 사용자 후기</h4>
+                <div className="quotes-list">
+                  {realInsights.real_user_quotes.map((quote, i) => (
+                    <div key={i} className={`quote-item ${quote.sentiment}`}>
+                      <span className="quote-icon">
+                        {quote.sentiment === 'positive' ? '👍' : '👎'}
+                      </span>
+                      <p className="quote-text">"{quote.quote}"</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 장점 */}
+            {realInsights.common_praises && realInsights.common_praises.length > 0 && (
+              <div className="review-section praises">
+                <h4>✅ 많이 언급된 장점</h4>
+                <ul className="praises-list">
+                  {realInsights.common_praises.map((praise, i) => (
+                    <li key={i}>{praise}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* 구매 결정 요소 */}
+            {realInsights.purchase_decision_factors && realInsights.purchase_decision_factors.length > 0 && (
+              <div className="review-section decision-factors">
+                <h4>🎯 구매 결정 요소</h4>
+                <div className="factors-tags">
+                  {realInsights.purchase_decision_factors.map((factor, i) => (
+                    <span key={i} className="factor-tag">{factor}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 출처 정보 */}
+            {realInsights.source_breakdown && Object.keys(realInsights.source_breakdown).length > 0 && (
+              <div className="source-info">
+                <span className="source-label">출처:</span>
+                {Object.entries(realInsights.source_breakdown).map(([source, count]) => (
+                  <span key={source} className="source-tag">
+                    {source} ({count}개)
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="review-section">
           <h4>⚠️ 주요 불만/단점</h4>
           <ul className="complaints-list">
@@ -261,6 +346,9 @@ function renderRecommendations(
               <li key={c.rank} className={`complaint severity-${c.severity}`}>
                 <span className="rank">#{c.rank}</span>
                 <span className="issue">{c.issue}</span>
+                <span className={`frequency-badge ${c.frequency === '실제 리뷰 기반' ? 'real' : ''}`}>
+                  {c.frequency}
+                </span>
                 <span className={`severity ${c.severity}`}>{c.severity === 'high' ? '심각' : c.severity === 'medium' ? '보통' : '낮음'}</span>
               </li>
             ))}
@@ -448,12 +536,16 @@ function GiftRecommendationWithPaging({ recommendation }: { recommendation: Gift
   );
 }
 
-// VALUE 모드용 카드 컴포넌트 (관심상품, 별점 기능 포함)
+// VALUE 모드용 카드 컴포넌트 (관심상품, 별점, 비교 기능 포함)
 function ValueCard({ card }: { card: RecommendationCard }) {
   const { isAuthenticated } = useAuth();
+  const toast = useToast();
+  const { addToCompare, removeFromCompare, isInCompare, isCompareFull } = useCompare();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [wishlistItemId, setWishlistItemId] = useState<string | null>(null);
   const [rating, setRating] = useState(0);
+
+  const inCompare = isInCompare(card.product_id);
 
   // 초기 상태 로드
   useEffect(() => {
@@ -523,6 +615,22 @@ function ValueCard({ card }: { card: RecommendationCard }) {
     }
   };
 
+  const handleCompareToggle = () => {
+    if (inCompare) {
+      removeFromCompare(card.product_id);
+      toast.info('비교 목록에서 제거되었습니다.');
+    } else {
+      if (isCompareFull) {
+        toast.warning('비교는 최대 4개까지 가능합니다.');
+        return;
+      }
+      const added = addToCompare(card);
+      if (added) {
+        toast.success('비교 목록에 추가되었습니다.');
+      }
+    }
+  };
+
   return (
     <div className="value-card">
       <div className="card-link-wrapper">
@@ -540,15 +648,27 @@ function ValueCard({ card }: { card: RecommendationCard }) {
             <p className="card-mall">{card.mall_name}</p>
           </div>
         </a>
-        {isAuthenticated && (
-          <div className="value-card-wishlist">
+        <div className="value-card-actions">
+          {isAuthenticated && (
             <WishlistButton
               isWishlisted={isWishlisted}
               onToggle={handleWishlistToggle}
               size="medium"
             />
-          </div>
-        )}
+          )}
+          <button
+            className={`compare-btn ${inCompare ? 'active' : ''}`}
+            onClick={handleCompareToggle}
+            title={inCompare ? '비교에서 제거' : '비교 추가'}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="7" height="7" />
+              <rect x="14" y="3" width="7" height="7" />
+              <rect x="14" y="14" width="7" height="7" />
+              <rect x="3" y="14" width="7" height="7" />
+            </svg>
+          </button>
+        </div>
       </div>
       {isAuthenticated && (
         <div className="value-card-rating">
@@ -606,11 +726,11 @@ function BundleRecommendationView({ recommendation }: { recommendation: BundleRe
 // BUNDLE 모드 조합 카드 컴포넌트 (별점 + 관심상품 기능 포함)
 function BundleCombinationCard({ combo }: { combo: BundleCombination }) {
   const { isAuthenticated } = useAuth();
+  const toast = useToast();
   const [rating, setRating] = useState(0);
   const [isLoadingRating, setIsLoadingRating] = useState(false);
   const [wishlistStatus, setWishlistStatus] = useState<Record<string, string | null>>({});
   const [isAddingToWishlist, setIsAddingToWishlist] = useState(false);
-  const [wishlistMessage, setWishlistMessage] = useState<string | null>(null);
 
   // 조합 내 모든 상품 ID 추출
   const productIds = combo.items.map(item => item.product.product_id);
@@ -676,7 +796,6 @@ function BundleCombinationCard({ combo }: { combo: BundleCombination }) {
     if (!isAuthenticated || isAddingToWishlist) return;
 
     setIsAddingToWishlist(true);
-    setWishlistMessage(null);
 
     try {
       let addedCount = 0;
@@ -711,16 +830,12 @@ function BundleCombinationCard({ combo }: { combo: BundleCombination }) {
       }
 
       if (addedCount > 0) {
-        setWishlistMessage(`${addedCount}개 상품이 관심상품에 추가되었습니다!`);
+        toast.success(`${addedCount}개 상품이 관심상품에 추가되었습니다!`);
       } else if (skippedCount > 0) {
-        setWishlistMessage('모든 상품이 이미 관심상품에 있습니다.');
+        toast.info('모든 상품이 이미 관심상품에 있습니다.');
       }
-
-      // 3초 후 메시지 숨기기
-      setTimeout(() => setWishlistMessage(null), 3000);
     } catch {
-      setWishlistMessage('관심상품 추가 중 오류가 발생했습니다.');
-      setTimeout(() => setWishlistMessage(null), 3000);
+      toast.error('관심상품 추가 중 오류가 발생했습니다.');
     } finally {
       setIsAddingToWishlist(false);
     }
@@ -731,7 +846,6 @@ function BundleCombinationCard({ combo }: { combo: BundleCombination }) {
     if (!isAuthenticated || isAddingToWishlist) return;
 
     setIsAddingToWishlist(true);
-    setWishlistMessage(null);
 
     try {
       let removedCount = 0;
@@ -755,14 +869,10 @@ function BundleCombinationCard({ combo }: { combo: BundleCombination }) {
       }
 
       if (removedCount > 0) {
-        setWishlistMessage(`${removedCount}개 상품이 관심상품에서 삭제되었습니다.`);
+        toast.success(`${removedCount}개 상품이 관심상품에서 삭제되었습니다.`);
       }
-
-      // 3초 후 메시지 숨기기
-      setTimeout(() => setWishlistMessage(null), 3000);
     } catch {
-      setWishlistMessage('관심상품 삭제 중 오류가 발생했습니다.');
-      setTimeout(() => setWishlistMessage(null), 3000);
+      toast.error('관심상품 삭제 중 오류가 발생했습니다.');
     } finally {
       setIsAddingToWishlist(false);
     }
@@ -829,9 +939,6 @@ function BundleCombinationCard({ combo }: { combo: BundleCombination }) {
               </>
             )}
           </button>
-          {wishlistMessage && (
-            <span className="wishlist-message">{wishlistMessage}</span>
-          )}
         </div>
       )}
 

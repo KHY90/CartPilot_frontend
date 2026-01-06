@@ -347,11 +347,53 @@
   color: inherit;
 }
 
+.value-card-actions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .value-card-wishlist {
   position: absolute;
   top: 12px;
   right: 12px;
   z-index: 10;
+}
+
+/* 비교 버튼 */
+.compare-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: all 0.2s ease;
+}
+
+.compare-btn:hover {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.compare-btn.active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.compare-btn.active:hover {
+  background-color: var(--color-primary-dark, #4f46e5);
 }
 
 .value-card-rating {
@@ -872,6 +914,223 @@
   background-color: var(--color-bg-secondary);
   border-radius: var(--radius);
   margin-top: 16px;
+}
+
+/* Real Review Insights (Phase 2.1) */
+.real-review-insights {
+  margin-bottom: 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #bae6fd;
+  border-radius: var(--radius-md);
+}
+
+.insights-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.insights-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  background-color: #0ea5e9;
+  color: white;
+  border-radius: var(--radius-full);
+}
+
+.insights-badge::before {
+  content: "✓";
+}
+
+.data-freshness {
+  font-size: 12px;
+  color: #0369a1;
+  font-weight: 500;
+}
+
+/* Satisfaction Meter */
+.satisfaction-meter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background-color: white;
+  border-radius: var(--radius);
+}
+
+.satisfaction-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.satisfaction-bar {
+  flex: 1;
+  height: 12px;
+  background-color: #e2e8f0;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.satisfaction-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease;
+}
+
+.satisfaction-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #16a34a;
+  min-width: 50px;
+  text-align: right;
+}
+
+/* User Quotes Section */
+.user-quotes-section {
+  margin-bottom: 16px;
+}
+
+.user-quotes-section h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.quotes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quote-item {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  background-color: white;
+  border-radius: var(--radius);
+  border-left: 3px solid;
+}
+
+.quote-item.positive {
+  border-left-color: #22c55e;
+}
+
+.quote-item.negative {
+  border-left-color: #ef4444;
+}
+
+.quote-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.quote-text {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* Praises Section */
+.review-section.praises {
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.praises-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.praises-list li {
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #166534;
+  background-color: #dcfce7;
+  border-radius: var(--radius);
+}
+
+.praises-list li::before {
+  content: "✓ ";
+  font-weight: 600;
+}
+
+/* Decision Factors */
+.review-section.decision-factors h4 {
+  margin-bottom: 16px;
+}
+
+.factors-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.factor-tag {
+  display: inline-block;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #1e40af;
+  background-color: #dbeafe;
+  border-radius: var(--radius-full);
+}
+
+/* Source Info */
+.source-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 12px;
+  margin-top: 12px;
+  border-top: 1px solid #bae6fd;
+  flex-wrap: wrap;
+}
+
+.source-label {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.source-tag {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: #475569;
+  background-color: white;
+  border-radius: var(--radius);
+  border: 1px solid #e2e8f0;
+}
+
+/* Frequency Badge */
+.frequency-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background-color: #e2e8f0;
+  color: #64748b;
+}
+
+.frequency-badge.real {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 600;
 }
 
 /* TREND Mode Styles */

@@ -1,10 +1,12 @@
+/* Header Styles */
+
 .app-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px 24px;
-  background: #1a1a2e;
-  border-bottom: 1px solid #333;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .header-left {
@@ -31,7 +33,7 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
   border-radius: 10px;
   color: white;
 }
@@ -39,12 +41,12 @@
 .app-logo h1 {
   font-size: 20px;
   font-weight: 700;
-  color: white;
+  color: var(--color-text);
   margin: 0;
 }
 
 .app-subtitle {
-  color: #888;
+  color: var(--color-text-muted);
   font-size: 14px;
 }
 
@@ -66,13 +68,13 @@
   gap: 8px;
   margin-right: 8px;
   padding-right: 16px;
-  border-right: 1px solid #444;
+  border-right: 1px solid var(--color-border);
 }
 
 .nav-link {
   background: transparent;
   border: none;
-  color: #aaa;
+  color: var(--color-text-secondary);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -82,8 +84,8 @@
 }
 
 .nav-link:hover {
-  background: #333;
-  color: white;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text);
 }
 
 .user-avatar {
@@ -97,7 +99,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -107,7 +109,7 @@
 }
 
 .user-name {
-  color: white;
+  color: var(--color-text);
   font-size: 14px;
   font-weight: 500;
 }
@@ -123,7 +125,7 @@
 }
 
 .login-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
   color: white;
   border: none;
 }
@@ -135,13 +137,13 @@
 
 .logout-button {
   background: transparent;
-  color: #888;
-  border: 1px solid #444;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
 }
 
 .logout-button:hover {
-  background: #333;
-  color: white;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text);
 }
 
 @media (max-width: 768px) {

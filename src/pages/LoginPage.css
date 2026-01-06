@@ -1,14 +1,16 @@
+/* LoginPage Styles */
+
 .login-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
   padding: 20px;
 }
 
 .login-container {
-  background: white;
+  background: var(--color-surface);
   border-radius: 16px;
   padding: 48px;
   max-width: 420px;
@@ -27,7 +29,7 @@
   justify-content: center;
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
   border-radius: 20px;
   margin-bottom: 20px;
   color: white;
@@ -36,12 +38,12 @@
 .login-header h1 {
   font-size: 28px;
   font-weight: 700;
-  color: #1a1a2e;
+  color: var(--color-text);
   margin: 0 0 8px 0;
 }
 
 .login-subtitle {
-  color: #666;
+  color: var(--color-text-secondary);
   font-size: 15px;
   margin: 0;
 }
@@ -91,7 +93,7 @@
 }
 
 .login-features {
-  background: #f8f9fa;
+  background: var(--color-bg-secondary);
   border-radius: 12px;
   padding: 24px;
 }
@@ -99,7 +101,7 @@
 .login-features h3 {
   font-size: 14px;
   font-weight: 600;
-  color: #666;
+  color: var(--color-text-secondary);
   margin: 0 0 16px 0;
   text-align: center;
 }
@@ -118,7 +120,7 @@
   align-items: center;
   gap: 12px;
   font-size: 14px;
-  color: #444;
+  color: var(--color-text-secondary);
 }
 
 .feature-icon {

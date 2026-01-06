@@ -1,9 +1,10 @@
 /**
  * 헤더 컴포넌트
- * 로고, 로그인/로그아웃 버튼
+ * 로고, 로그인/로그아웃 버튼, 테마 토글
  */
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import ThemeToggle from './ThemeToggle';
 import './Header.css';
 
 function Header() {
@@ -41,6 +42,7 @@ function Header() {
       </div>
 
       <div className="header-right">
+        <ThemeToggle />
         {isAuthenticated ? (
           <div className="user-menu">
             <nav className="header-nav">

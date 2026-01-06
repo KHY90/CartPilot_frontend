@@ -1,0 +1,51 @@
+/* ThemeToggle Styles */
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text);
+  border-color: var(--color-primary);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle svg {
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover svg {
+  transform: rotate(15deg);
+}
+
+/* 다크 모드에서 태양 아이콘 효과 */
+[data-theme="dark"] .theme-toggle {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background: var(--color-bg-tertiary);
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+/* 라이트 모드에서 달 아이콘 효과 */
+[data-theme="light"] .theme-toggle:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}

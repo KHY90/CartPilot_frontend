@@ -11,6 +11,11 @@ import AuthCallback from './pages/AuthCallback';
 import PurchasesPage from './pages/PurchasesPage';
 import WishlistPage from './pages/WishlistPage';
 import { ChatProvider, useChat } from './contexts/ChatContext';
+import { ToastProvider } from './contexts/ToastContext';
+import { CompareProvider } from './contexts/CompareContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+import ToastContainer from './components/common/Toast';
+import ComparePanel from './components/ComparePanel/ComparePanel';
 import './App.css';
 
 function HomePage() {
@@ -45,41 +50,49 @@ function HomePage() {
 
 function App() {
   return (
-    <ChatProvider>
-      <div className="app">
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route
-            path="/wishlist"
-            element={
-              <>
-                <Header />
-                <WishlistPage />
-              </>
-            }
-          />
-          <Route
-            path="/purchases"
-            element={
-              <>
-                <Header />
-                <PurchasesPage />
-              </>
-            }
-          />
-          <Route
-            path="/*"
-            element={
-              <>
-                <Header />
-                <HomePage />
-              </>
-            }
-          />
-        </Routes>
-      </div>
-    </ChatProvider>
+    <ThemeProvider>
+      <ToastProvider>
+        <CompareProvider>
+          <ChatProvider>
+            <div className="app">
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/auth/callback" element={<AuthCallback />} />
+                <Route
+                  path="/wishlist"
+                  element={
+                    <>
+                      <Header />
+                      <WishlistPage />
+                    </>
+                  }
+                />
+                <Route
+                  path="/purchases"
+                  element={
+                    <>
+                      <Header />
+                      <PurchasesPage />
+                    </>
+                  }
+                />
+                <Route
+                  path="/*"
+                  element={
+                    <>
+                      <Header />
+                      <HomePage />
+                    </>
+                  }
+                />
+              </Routes>
+              <ToastContainer />
+              <ComparePanel />
+            </div>
+          </ChatProvider>
+        </CompareProvider>
+      </ToastProvider>
+    </ThemeProvider>
   );
 }
 

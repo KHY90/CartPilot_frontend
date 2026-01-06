@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import {
   getWishlist,
   removeFromWishlist,
@@ -26,6 +27,7 @@ import {
   getRatingForProduct,
 } from '../services/ratingsApi';
 import PriceHistoryChart from '../components/PriceHistoryChart/PriceHistoryChart';
+import PricePrediction from '../components/PriceHistoryChart/PricePrediction';
 import StarRating from '../components/common/StarRating';
 import './WishlistPage.css';
 
@@ -46,6 +48,7 @@ const CATEGORIES = [
 function WishlistPage() {
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -80,6 +83,9 @@ function WishlistPage() {
 
   // 별점 상태
   const [ratings, setRatings] = useState<Record<string, number>>({});
+
+  // 가격 예측 모달 상태
+  const [predictionItem, setPredictionItem] = useState<WishlistItem | null>(null);
 
   useEffect(() => {
     if (isAuthLoading) return; // 인증 상태 확인 중이면 대기
@@ -160,9 +166,9 @@ function WishlistPage() {
       });
       setNotificationSettings(updated);
       setShowNotificationModal(false);
-      alert('알림 설정이 저장되었습니다.');
+      toast.success('알림 설정이 저장되었습니다.');
     } catch (err) {
-      alert('알림 설정 저장에 실패했습니다.');
+      toast.error('알림 설정 저장에 실패했습니다.');
       console.error(err);
     } finally {
       setIsSavingNotification(false);
@@ -175,8 +181,9 @@ function WishlistPage() {
     try {
       await removeFromWishlist(itemId);
       setItems(items.filter((item) => item.id !== itemId));
+      toast.success('관심상품에서 삭제되었습니다.');
     } catch (err) {
-      alert('삭제에 실패했습니다.');
+      toast.error('삭제에 실패했습니다.');
       console.error(err);
     }
   };
@@ -187,8 +194,9 @@ function WishlistPage() {
         notification_enabled: !item.notification_enabled,
       });
       setItems(items.map((i) => (i.id === item.id ? updated : i)));
+      toast.success(updated.notification_enabled ? '알림이 활성화되었습니다.' : '알림이 비활성화되었습니다.');
     } catch (err) {
-      alert('알림 설정 변경에 실패했습니다.');
+      toast.error('알림 설정 변경에 실패했습니다.');
       console.error(err);
     }
   };
@@ -196,7 +204,7 @@ function WishlistPage() {
   const handleSetTargetPrice = async (itemId: string) => {
     const price = parseInt(targetPriceInput.replace(/,/g, ''));
     if (isNaN(price) || price <= 0) {
-      alert('올바른 가격을 입력해주세요.');
+      toast.warning('올바른 가격을 입력해주세요.');
       return;
     }
 
@@ -205,8 +213,9 @@ function WishlistPage() {
       setItems(items.map((i) => (i.id === itemId ? updated : i)));
       setEditingTargetPrice(null);
       setTargetPriceInput('');
+      toast.success('목표가가 설정되었습니다.');
     } catch (err) {
-      alert('목표가 설정에 실패했습니다.');
+      toast.error('목표가 설정에 실패했습니다.');
       console.error(err);
     }
   };
@@ -258,7 +267,7 @@ function WishlistPage() {
       // 결과 모달 표시
       setPriceCheckResult({ itemId: item.id, result });
     } catch (err) {
-      alert('가격 확인에 실패했습니다.');
+      toast.error('가격 확인에 실패했습니다.');
       console.error(err);
     } finally {
       setCheckingPriceId(null);
@@ -272,11 +281,11 @@ function WishlistPage() {
   // 직접 상품 등록
   const handleAddManualItem = async () => {
     if (!newItemName.trim()) {
-      alert('상품명을 입력해주세요.');
+      toast.warning('상품명을 입력해주세요.');
       return;
     }
     if (!newItemCategory) {
-      alert('카테고리를 선택해주세요.');
+      toast.warning('카테고리를 선택해주세요.');
       return;
     }
 
@@ -294,8 +303,9 @@ function WishlistPage() {
       setShowAddModal(false);
       setNewItemName('');
       setNewItemCategory('');
+      toast.success('관심상품이 등록되었습니다.');
     } catch (err) {
-      alert('상품 등록에 실패했습니다.');
+      toast.error('상품 등록에 실패했습니다.');
       console.error(err);
     } finally {
       setIsAddingItem(false);
@@ -589,6 +599,18 @@ function WishlistPage() {
                   </button>
 
                   <button
+                    className="action-btn prediction-btn"
+                    onClick={() => setPredictionItem(item)}
+                    title="가격 예측 보기"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12,6 12,12 16,14" />
+                    </svg>
+                    예측
+                  </button>
+
+                  <button
                     className={`action-btn check-price-btn ${checkingPriceId === item.id ? 'loading' : ''}`}
                     onClick={() => handleCheckPrice(item)}
                     disabled={checkingPriceId === item.id}
@@ -659,6 +681,15 @@ function WishlistPage() {
           currentPrice={selectedItem.current_price}
           lowestPrice90days={selectedItem.lowest_price_90days}
           onClose={() => setSelectedItem(null)}
+        />
+      )}
+
+      {/* 가격 예측 모달 */}
+      {predictionItem && (
+        <PricePrediction
+          itemId={predictionItem.id}
+          productName={predictionItem.product_name}
+          onClose={() => setPredictionItem(null)}
         />
       )}
 
