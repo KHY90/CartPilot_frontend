@@ -1,0 +1,50 @@
+/**
+ * ProductCardSkeleton 스타일
+ */
+
+.product-card-skeleton-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+.product-card-skeleton {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.skeleton-image {
+  margin-bottom: 12px;
+}
+
+.skeleton-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton-title {
+  margin-bottom: 4px;
+}
+
+.skeleton-title-sub {
+  margin-bottom: 8px;
+}
+
+.skeleton-price-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.skeleton-rating {
+  margin: 4px 0;
+}
+
+.skeleton-reason {
+  margin-top: 8px;
+}

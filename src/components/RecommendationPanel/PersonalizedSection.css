@@ -1,0 +1,176 @@
+/* PersonalizedSection Styles */
+
+.personalized-section {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #fcd34d;
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+}
+
+.personalized-section.expanded {
+  background: linear-gradient(135deg, #fef9c3 0%, #fef3c7 100%);
+}
+
+.personalized-section.empty {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-border);
+}
+
+/* Header */
+.personalized-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.personalized-header.clickable {
+  cursor: pointer;
+  background: none;
+  border: none;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.personalized-icon {
+  font-size: 20px;
+}
+
+.personalized-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.personalized-section.empty .personalized-title {
+  color: var(--color-text);
+}
+
+.data-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  background-color: rgba(146, 64, 14, 0.15);
+  color: #92400e;
+  border-radius: var(--radius-full);
+  font-weight: 500;
+}
+
+.expand-arrow {
+  display: flex;
+  align-items: center;
+  color: #92400e;
+  transition: transform 0.2s ease;
+}
+
+/* Summary */
+.personalized-summary {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  color: #78350f;
+  line-height: 1.5;
+}
+
+.empty-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.empty-message {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* Insights Grid */
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(146, 64, 14, 0.2);
+}
+
+.insight-card {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: var(--radius);
+  transition: transform 0.2s ease;
+}
+
+.insight-card:hover {
+  transform: translateY(-2px);
+}
+
+.insight-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.insight-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.insight-label {
+  font-size: 11px;
+  color: #92400e;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.insight-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #78350f;
+  word-break: break-word;
+}
+
+.insight-desc {
+  font-size: 11px;
+  color: #a16207;
+}
+
+/* Preview (접혔을 때) */
+.insights-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.preview-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #92400e;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-full);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .insights-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .personalized-section {
+    padding: 12px;
+  }
+}

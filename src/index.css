@@ -10,6 +10,7 @@
   /* Neutral Colors */
   --color-bg: #f8fafc;
   --color-bg-secondary: #f1f5f9;
+  --color-bg-tertiary: #e2e8f0;
   --color-surface: #ffffff;
   --color-border: #e2e8f0;
   --color-border-light: #f1f5f9;
@@ -26,6 +27,7 @@
   --color-warning-light: #fffbeb;
   --color-error: #dc2626;
   --color-error-light: #fef2f2;
+  --color-danger: #dc2626;
 
   /* Accent Colors */
   --color-accent: #8b5cf6;
@@ -53,6 +55,48 @@
 
   /* Typography */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+  /* Primary Colors - Adjusted for dark mode */
+  --color-primary: #667eea;
+  --color-primary-hover: #5a6fd6;
+  --color-primary-light: rgba(102, 126, 234, 0.15);
+  --color-primary-dark: #8b9af5;
+
+  /* Neutral Colors - Dark mode */
+  --color-bg: #0f0f1a;
+  --color-bg-secondary: #1a1a2e;
+  --color-bg-tertiary: #252540;
+  --color-surface: #1e1e32;
+  --color-border: #2d2d50;
+  --color-border-light: #252540;
+
+  /* Text Colors - Dark mode */
+  --color-text: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+
+  /* Status Colors - Adjusted for dark mode */
+  --color-success: #22c55e;
+  --color-success-light: rgba(34, 197, 94, 0.15);
+  --color-warning: #f59e0b;
+  --color-warning-light: rgba(245, 158, 11, 0.15);
+  --color-error: #ef4444;
+  --color-error-light: rgba(239, 68, 68, 0.15);
+  --color-danger: #ef4444;
+
+  /* Accent Colors - Dark mode */
+  --color-accent: #a78bfa;
+  --color-accent-light: rgba(167, 139, 250, 0.15);
+
+  /* Shadows - Dark mode */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.5);
 }
 
 * {

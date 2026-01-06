@@ -80,6 +80,23 @@ export interface ReviewComplaint {
   severity: Severity;
 }
 
+// 실제 리뷰 인사이트 (크롤링 데이터 기반)
+export interface RealUserQuote {
+  quote: string;
+  sentiment: 'positive' | 'negative';
+}
+
+export interface RealReviewInsights {
+  total_reviews_analyzed: number;
+  average_satisfaction?: number;
+  common_praises: string[];
+  common_complaints: string[];
+  purchase_decision_factors: string[];
+  real_user_quotes: RealUserQuote[];
+  data_freshness: string;
+  source_breakdown: Record<string, number>;
+}
+
 export interface ReviewAnalysis {
   product_category: string;
   top_complaints: ReviewComplaint[];
@@ -87,6 +104,8 @@ export interface ReviewAnalysis {
   management_tips: string[];
   overall_sentiment: Sentiment;
   disclaimer: string;
+  // 실제 리뷰 데이터 기반 인사이트 (옵션)
+  real_review_insights?: RealReviewInsights;
 }
 
 // TREND 모드

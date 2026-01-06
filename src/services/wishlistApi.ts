@@ -59,6 +59,47 @@ export interface PriceHistoryItem {
   recorded_at: string;
 }
 
+export interface PriceTrend {
+  direction: 'up' | 'down' | 'stable';
+  change_rate: number;
+  period_days: number;
+}
+
+export interface UpcomingSale {
+  name: string;
+  start_date: string;
+  end_date: string;
+  days_until: number;
+  expected_discount: number;
+  applicable: boolean;
+}
+
+export interface PricePrediction {
+  product_id: string;
+  current_price: number;
+  trend: PriceTrend;
+  lowest_price_90d?: number;
+  highest_price_90d?: number;
+  predicted_price_7d?: number;
+  predicted_price_30d?: number;
+  confidence: number;
+  upcoming_sales: UpcomingSale[];
+  best_buy_timing: string;
+  buy_recommendation: 'buy_now' | 'wait' | 'neutral';
+  recommendation_reason: string;
+  analyzed_at: string;
+  history_points: number;
+}
+
+export interface PredictionSummary {
+  total_products: number;
+  buy_now_count: number;
+  wait_count: number;
+  neutral_count: number;
+  next_sale?: UpcomingSale;
+  potential_savings: number;
+}
+
 /**
  * 관심상품 목록 조회
  */
@@ -140,6 +181,32 @@ export async function checkPriceNow(itemId: string): Promise<PriceCheckResult> {
   const response = await apiClient.post<PriceCheckResult>(
     `/api/wishlist/${itemId}/check-price`,
     {},
+    {
+      headers: getAuthHeaders(),
+    }
+  );
+  return response.data;
+}
+
+/**
+ * 가격 예측 조회
+ */
+export async function getPricePrediction(itemId: string): Promise<PricePrediction> {
+  const response = await apiClient.get<PricePrediction>(
+    `/api/wishlist/${itemId}/prediction`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
+  return response.data;
+}
+
+/**
+ * 예측 요약 조회
+ */
+export async function getPredictionsSummary(): Promise<PredictionSummary> {
+  const response = await apiClient.get<PredictionSummary>(
+    '/api/wishlist/predictions/summary',
     {
       headers: getAuthHeaders(),
     }

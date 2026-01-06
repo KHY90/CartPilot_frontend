@@ -3,7 +3,7 @@
 .wishlist-page {
   min-height: calc(100vh - 70px);
   padding: 32px;
-  background: #0f0f1a;
+  background: var(--color-bg);
 }
 
 /* 헤더 */
@@ -23,13 +23,13 @@
   margin: 0 0 8px 0;
   font-size: 28px;
   font-weight: 700;
-  color: white;
+  color: var(--color-text);
 }
 
 .wishlist-subtitle {
   margin: 0;
   font-size: 14px;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 /* 직접 등록 버튼 */
@@ -38,7 +38,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
   border: none;
   border-radius: 8px;
   color: white;
@@ -67,9 +67,9 @@
   gap: 8px;
   padding: 12px 20px;
   background: transparent;
-  border: 1px solid #444;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  color: #ccc;
+  color: var(--color-text-secondary);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -78,9 +78,9 @@
 }
 
 .notification-settings-button:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: #667eea;
-  color: white;
+  background: var(--color-bg-secondary);
+  border-color: var(--color-primary);
+  color: var(--color-text);
 }
 
 /* 알림 설정 모달 스타일 */
@@ -89,7 +89,7 @@
 }
 
 .notification-description {
-  color: #888;
+  color: var(--color-text-muted);
   font-size: 14px;
   margin-bottom: 20px;
   line-height: 1.5;
@@ -100,31 +100,31 @@
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  color: white;
+  color: var(--color-text);
   font-size: 14px;
 }
 
 .checkbox-label input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  accent-color: #667eea;
+  accent-color: var(--color-primary);
   cursor: pointer;
 }
 
 .email-input {
   width: 100%;
   padding: 12px 16px;
-  background: #1a1a2e;
-  border: 1px solid #333;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  color: white;
+  color: var(--color-text);
   font-size: 14px;
   transition: border-color 0.2s ease;
 }
 
 .email-input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--color-primary);
 }
 
 .email-input:disabled {
@@ -135,7 +135,7 @@
 .notification-conditions {
   margin-top: 20px;
   padding: 16px;
-  background: rgba(102, 126, 234, 0.1);
+  background: var(--color-primary-light);
   border-radius: 8px;
   border: 1px solid rgba(102, 126, 234, 0.2);
 }
@@ -144,13 +144,13 @@
   margin: 0 0 12px 0;
   font-size: 14px;
   font-weight: 600;
-  color: #667eea;
+  color: var(--color-primary);
 }
 
 .notification-conditions ul {
   margin: 0;
   padding-left: 20px;
-  color: #aaa;
+  color: var(--color-text-secondary);
   font-size: 13px;
   line-height: 1.8;
 }
@@ -168,8 +168,8 @@
 .wishlist-loading .spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #333;
-  border-top-color: #667eea;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -181,7 +181,7 @@
 }
 
 .wishlist-loading p {
-  color: #888;
+  color: var(--color-text-muted);
   font-size: 14px;
 }
 
@@ -196,23 +196,23 @@
 }
 
 .wishlist-error p {
-  color: #ef4444;
+  color: var(--color-error);
   font-size: 14px;
 }
 
 .wishlist-error button {
   padding: 10px 20px;
-  background: #333;
+  background: var(--color-bg-tertiary);
   border: none;
   border-radius: 8px;
-  color: white;
+  color: var(--color-text);
   font-size: 14px;
   cursor: pointer;
   transition: background 0.2s ease;
 }
 
 .wishlist-error button:hover {
-  background: #444;
+  background: var(--color-border);
 }
 
 /* 빈 상태 */
@@ -227,25 +227,25 @@
 }
 
 .empty-icon {
-  color: #444;
+  color: var(--color-border);
 }
 
 .wishlist-empty h3 {
   margin: 0;
   font-size: 20px;
-  color: white;
+  color: var(--color-text);
 }
 
 .wishlist-empty p {
   margin: 0;
   font-size: 14px;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 .go-home-button {
   margin-top: 8px;
   padding: 12px 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
   border: none;
   border-radius: 8px;
   color: white;
@@ -271,24 +271,24 @@
 
 /* 카드 */
 .wishlist-card {
-  background: #1a1a2e;
+  background: var(--color-surface);
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid #333;
+  border: 1px solid var(--color-border);
   transition: all 0.2s ease;
 }
 
 .wishlist-card:hover {
-  border-color: #444;
+  border-color: var(--color-border-light);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg);
 }
 
 /* 이미지 */
 .card-image {
   position: relative;
   height: 180px;
-  background: #16162a;
+  background: var(--color-bg-secondary);
   overflow: hidden;
 }
 
@@ -303,7 +303,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #444;
+  color: var(--color-border);
 }
 
 .price-status-badge {
@@ -333,7 +333,7 @@
 
 .card-mall {
   font-size: 12px;
-  color: #888;
+  color: var(--color-text-muted);
   margin-bottom: 8px;
 }
 
@@ -341,7 +341,7 @@
   margin: 0 0 16px 0;
   font-size: 14px;
   font-weight: 500;
-  color: white;
+  color: var(--color-text);
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -366,31 +366,31 @@
 
 .price-label {
   font-size: 11px;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 .price-value {
   font-size: 16px;
   font-weight: 600;
-  color: white;
+  color: var(--color-text);
 }
 
 .current-price .price-value {
-  color: #667eea;
+  color: var(--color-primary);
 }
 
 .lowest-price .price-value {
-  color: #22c55e;
+  color: var(--color-success);
 }
 
 .price-value.clickable {
   cursor: pointer;
-  color: #888;
+  color: var(--color-text-muted);
   transition: color 0.2s ease;
 }
 
 .price-value.clickable:hover {
-  color: #667eea;
+  color: var(--color-primary);
 }
 
 /* 목표가 수정 */
@@ -407,16 +407,16 @@
 .target-price-edit input {
   flex: 1;
   padding: 8px 12px;
-  background: #16162a;
-  border: 1px solid #444;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  color: white;
+  color: var(--color-text);
   font-size: 14px;
 }
 
 .target-price-edit input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--color-primary);
 }
 
 .target-price-edit .save-btn,
@@ -430,29 +430,29 @@
 }
 
 .target-price-edit .save-btn {
-  background: #667eea;
+  background: var(--color-primary);
   color: white;
 }
 
 .target-price-edit .save-btn:hover {
-  background: #5a6fd6;
+  background: var(--color-primary-hover);
 }
 
 .target-price-edit .cancel-btn {
-  background: #333;
-  color: #888;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-muted);
 }
 
 .target-price-edit .cancel-btn:hover {
-  background: #444;
-  color: white;
+  background: var(--color-border);
+  color: var(--color-text);
 }
 
 /* 별점 섹션 */
 .wishlist-page .rating-section {
   margin-bottom: 12px;
   padding: 12px;
-  background: rgba(102, 126, 234, 0.05);
+  background: var(--color-primary-light);
   border-radius: 8px;
   border: 1px solid rgba(102, 126, 234, 0.1);
 }
@@ -460,7 +460,7 @@
 .wishlist-page .rating-label {
   display: block;
   font-size: 11px;
-  color: #888;
+  color: var(--color-text-muted);
   margin-bottom: 8px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -480,13 +480,13 @@
 
 .wishlist-page .rating-placeholder {
   font-size: 12px;
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 /* 메타 */
 .card-meta {
   font-size: 11px;
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 /* 액션 버튼 */
@@ -495,8 +495,8 @@
   flex-wrap: wrap;
   gap: 8px;
   padding: 12px 16px;
-  background: #16162a;
-  border-top: 1px solid #333;
+  background: var(--color-bg-secondary);
+  border-top: 1px solid var(--color-border);
 }
 
 .action-btn {
@@ -504,10 +504,10 @@
   align-items: center;
   gap: 6px;
   padding: 8px 12px;
-  background: #1a1a2e;
-  border: 1px solid #333;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  color: #888;
+  color: var(--color-text-muted);
   font-size: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -515,24 +515,36 @@
 }
 
 .action-btn:hover {
-  background: #333;
-  color: white;
-  border-color: #444;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text);
+  border-color: var(--color-border-light);
 }
 
 .chart-btn:hover {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.prediction-btn {
+  background: rgba(168, 85, 247, 0.1);
+  border-color: rgba(168, 85, 247, 0.2);
+  color: #a855f7;
+}
+
+.prediction-btn:hover {
+  background: rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.4);
+  color: #c084fc;
 }
 
 .notification-btn.active {
-  background: rgba(34, 197, 94, 0.1);
+  background: var(--color-success-light);
   border-color: rgba(34, 197, 94, 0.3);
-  color: #22c55e;
+  color: var(--color-success);
 }
 
 .notification-btn:not(.active) {
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 .link-btn:hover {
@@ -545,9 +557,9 @@
 }
 
 .delete-btn:hover {
-  background: rgba(239, 68, 68, 0.1);
+  background: var(--color-error-light);
   border-color: rgba(239, 68, 68, 0.3);
-  color: #ef4444;
+  color: var(--color-error);
 }
 
 /* 가격 확인 버튼 */
@@ -564,7 +576,7 @@
 .btn-spinner {
   width: 14px;
   height: 14px;
-  border: 2px solid #888;
+  border: 2px solid var(--color-text-muted);
   border-top-color: #f59e0b;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -572,7 +584,7 @@
 
 /* 가격 분석 섹션 */
 .price-analysis-section {
-  background: rgba(102, 126, 234, 0.05);
+  background: var(--color-primary-light);
   border: 1px solid rgba(102, 126, 234, 0.2);
   border-radius: 8px;
   padding: 12px;
@@ -589,7 +601,7 @@
 .analysis-title {
   font-size: 12px;
   font-weight: 600;
-  color: #888;
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -602,18 +614,18 @@
 }
 
 .badge-buy {
-  background: rgba(34, 197, 94, 0.2);
-  color: #22c55e;
+  background: var(--color-success-light);
+  color: var(--color-success);
 }
 
 .badge-wait {
-  background: rgba(234, 179, 8, 0.2);
-  color: #eab308;
+  background: var(--color-warning-light);
+  color: var(--color-warning);
 }
 
 .badge-neutral {
-  background: rgba(136, 136, 136, 0.2);
-  color: #888;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-muted);
 }
 
 .badge-insufficient {
@@ -646,34 +658,34 @@
 
 .analysis-stat .stat-label {
   font-size: 10px;
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 .wishlist-page .analysis-stat .stat-value {
   font-size: 13px;
   font-weight: 600;
-  color: white;
+  color: var(--color-text);
 }
 
 .analysis-stat .stat-value.high {
-  color: #ef4444;
+  color: var(--color-error);
 }
 
 .analysis-stat .stat-value.down {
-  color: #22c55e;
+  color: var(--color-success);
 }
 
 .analysis-stat .stat-value.up {
-  color: #ef4444;
+  color: var(--color-error);
 }
 
 .is-lowest-indicator {
   margin-top: 10px;
   padding: 8px;
-  background: rgba(34, 197, 94, 0.1);
+  background: var(--color-success-light);
   border: 1px solid rgba(34, 197, 94, 0.3);
   border-radius: 6px;
-  color: #22c55e;
+  color: var(--color-success);
   font-size: 12px;
   font-weight: 600;
   text-align: center;
@@ -684,15 +696,15 @@
   align-items: center;
   gap: 8px;
   padding: 12px;
-  color: #666;
+  color: var(--color-text-muted);
   font-size: 12px;
 }
 
 .analysis-spinner {
   width: 12px;
   height: 12px;
-  border: 2px solid #333;
-  border-top-color: #667eea;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -713,11 +725,11 @@
 }
 
 .price-check-modal {
-  background: #1a1a2e;
+  background: var(--color-surface);
   border-radius: 16px;
   width: 100%;
   max-width: 400px;
-  border: 1px solid #333;
+  border: 1px solid var(--color-border);
 }
 
 .price-check-header {
@@ -725,19 +737,19 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .price-check-header h3 {
   margin: 0;
   font-size: 18px;
-  color: white;
+  color: var(--color-text);
 }
 
 .price-check-header .close-button {
   background: transparent;
   border: none;
-  color: #888;
+  color: var(--color-text-muted);
   cursor: pointer;
   padding: 4px;
   display: flex;
@@ -747,7 +759,7 @@
 }
 
 .price-check-header .close-button:hover {
-  color: white;
+  color: var(--color-text);
 }
 
 .price-check-content {
@@ -765,13 +777,13 @@
 }
 
 .price-change-indicator.down {
-  background: rgba(34, 197, 94, 0.1);
-  color: #22c55e;
+  background: var(--color-success-light);
+  color: var(--color-success);
 }
 
 .price-change-indicator.up {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
+  background: var(--color-error-light);
+  color: var(--color-error);
 }
 
 .change-icon {
@@ -801,23 +813,23 @@
 
 .price-item .label {
   font-size: 12px;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 .price-item .value {
   font-size: 18px;
   font-weight: 600;
-  color: white;
+  color: var(--color-text);
 }
 
 .price-item.previous .value {
   text-decoration: line-through;
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 .price-arrow {
   font-size: 20px;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 .change-details {
@@ -831,15 +843,15 @@
 }
 
 .change-amount.down {
-  color: #22c55e;
+  color: var(--color-success);
 }
 
 .change-amount.up {
-  color: #ef4444;
+  color: var(--color-error);
 }
 
 .lowest-alert {
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  background: linear-gradient(135deg, var(--color-success) 0%, #16a34a 100%);
   color: white;
   padding: 12px;
   border-radius: 8px;
@@ -854,25 +866,25 @@
 .no-change-icon {
   width: 48px;
   height: 48px;
-  background: rgba(102, 126, 234, 0.1);
+  background: var(--color-primary-light);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 16px;
   font-size: 24px;
-  color: #667eea;
+  color: var(--color-primary);
 }
 
 .no-change p {
   margin: 0 0 8px 0;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 .current-price-display {
   font-size: 16px;
   font-weight: 600;
-  color: white !important;
+  color: var(--color-text) !important;
 }
 
 /* 직접 등록 모달 */
@@ -891,11 +903,11 @@
 }
 
 .add-modal {
-  background: #1a1a2e;
+  background: var(--color-surface);
   border-radius: 16px;
   width: 100%;
   max-width: 420px;
-  border: 1px solid #333;
+  border: 1px solid var(--color-border);
 }
 
 .add-modal-header {
@@ -903,19 +915,19 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .add-modal-header h3 {
   margin: 0;
   font-size: 18px;
-  color: white;
+  color: var(--color-text);
 }
 
 .add-modal-header .close-button {
   background: transparent;
   border: none;
-  color: #888;
+  color: var(--color-text-muted);
   cursor: pointer;
   padding: 4px;
   display: flex;
@@ -925,7 +937,7 @@
 }
 
 .add-modal-header .close-button:hover {
-  color: white;
+  color: var(--color-text);
 }
 
 .add-modal-content {
@@ -941,17 +953,17 @@
   margin-bottom: 8px;
   font-size: 14px;
   font-weight: 500;
-  color: white;
+  color: var(--color-text);
 }
 
 .add-modal-content .category-select,
 .add-modal-content .product-name-input {
   width: 100%;
   padding: 12px 16px;
-  background: #16162a !important;
-  border: 1px solid #444;
+  background: var(--color-bg-secondary) !important;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  color: white !important;
+  color: var(--color-text) !important;
   font-size: 14px;
   transition: border-color 0.2s ease;
 }
@@ -959,30 +971,30 @@
 .add-modal-content .category-select:focus,
 .add-modal-content .product-name-input:focus {
   outline: none;
-  border-color: #667eea;
-  background: #16162a !important;
-  color: white !important;
+  border-color: var(--color-primary);
+  background: var(--color-bg-secondary) !important;
+  color: var(--color-text) !important;
 }
 
 /* 자동완성 스타일 오버라이드 */
 .add-modal-content .product-name-input:-webkit-autofill,
 .add-modal-content .product-name-input:-webkit-autofill:hover,
 .add-modal-content .product-name-input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px #16162a inset !important;
-  -webkit-text-fill-color: white !important;
-  background-color: #16162a !important;
-  caret-color: white;
+  -webkit-box-shadow: 0 0 0 1000px var(--color-bg-secondary) inset !important;
+  -webkit-text-fill-color: var(--color-text) !important;
+  background-color: var(--color-bg-secondary) !important;
+  caret-color: var(--color-text);
 }
 
 .add-modal-content .category-select option {
-  background: #16162a;
-  color: white;
+  background: var(--color-bg-secondary);
+  color: var(--color-text);
 }
 
 .add-modal-note {
   margin: 0;
   font-size: 12px;
-  color: #888;
+  color: var(--color-text-muted);
   text-align: center;
 }
 
@@ -990,7 +1002,7 @@
   display: flex;
   gap: 12px;
   padding: 20px;
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--color-border);
 }
 
 .add-modal-actions .cancel-button,
@@ -1005,18 +1017,18 @@
 }
 
 .add-modal-actions .cancel-button {
-  background: #333;
+  background: var(--color-bg-tertiary);
   border: none;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 .add-modal-actions .cancel-button:hover {
-  background: #444;
-  color: white;
+  background: var(--color-border);
+  color: var(--color-text);
 }
 
 .add-modal-actions .submit-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #764ba2 100%);
   border: none;
   color: white;
 }
