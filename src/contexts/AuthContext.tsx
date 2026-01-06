@@ -18,6 +18,7 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  accessToken: string | null;
   loginWithKakao: () => void;
   loginWithNaver: () => void;
   logout: () => Promise<void>;
@@ -95,6 +96,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     user,
     isAuthenticated: !!user,
     isLoading,
+    accessToken: getAccessToken(),
     loginWithKakao,
     loginWithNaver,
     logout,
