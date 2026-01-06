@@ -9,9 +9,11 @@ CartPilot 프론트엔드는 AI 기반 스마트 쇼핑 어시스턴트의 사�
 ### 주요 기능
 
 - **AI 채팅**: 자연어로 상품 추천 요청 및 실시간 응답
+- **상품 비교**: 2~4개 상품을 나란히 비교하는 테이블 UI
 - **소셜 로그인**: 카카오/네이버 원클릭 로그인
 - **관심상품 관리**: 상품 저장, 목표가 설정, 알림 설정
 - **가격 히스토리**: 90일 가격 변동 차트 시각화
+- **가격 예측**: Prophet 기반 7일/30일 후 가격 예측 모달
 - **구매 기록**: 구매 이력 관리 및 평점 등록
 - **반응형 UI**: 데스크톱/모바일 최적화
 
@@ -46,8 +48,14 @@ Frontend/
 │   │   │   └── *.css
 │   │   ├── Header/                  # 헤더
 │   │   │   └── Header.tsx               # 사용자 정보, 네비게이션
-│   │   ├── PriceHistoryChart/       # 가격 차트
-│   │   │   └── PriceHistoryChart.tsx    # 90일 가격 추이 차트
+│   │   ├── PriceHistoryChart/       # 가격 차트 및 예측
+│   │   │   ├── PriceHistoryChart.tsx    # 90일 가격 추이 차트
+│   │   │   ├── PricePrediction.tsx      # 가격 예측 모달
+│   │   │   └── PricePrediction.css      # 예측 모달 스타일
+│   │   ├── ComparePanel/            # 상품 비교
+│   │   │   ├── ComparePanel.tsx         # 비교 패널 메인
+│   │   │   ├── CompareTable.tsx         # 비교 테이블
+│   │   │   └── ComparePanel.css         # 비교 패널 스타일
 │   │   └── common/                  # 공통 컴포넌트
 │   │       ├── Loading.tsx              # 로딩 스피너
 │   │       ├── ErrorMessage.tsx         # 에러 메시지
@@ -60,7 +68,8 @@ Frontend/
 │   │   ├── WishlistPage.tsx             # 관심상품 페이지
 │   │   └── PurchasesPage.tsx            # 구매 기록 페이지
 │   ├── contexts/                    # React Context
-│   │   └── AuthContext.tsx              # 인증 상태 관리
+│   │   ├── AuthContext.tsx              # 인증 상태 관리
+│   │   └── CompareContext.tsx           # 상품 비교 상태 관리
 │   ├── services/                    # API 서비스
 │   │   ├── api.ts                       # Axios 인스턴스
 │   │   ├── authApi.ts                   # 인증 API
@@ -97,6 +106,11 @@ Frontend/
 - 가격 히스토리 차트
 - 목표가/알림 설정
 - 수동 가격 체크
+- **가격 예측 모달** (2025-01-06 추가)
+  - Prophet 기반 7일/30일 후 예측가
+  - 추세 분석 (상승/하락/안정)
+  - 구매 추천 (지금 구매/대기/중립)
+  - 예상 세일 일정 안내
 
 ### 구매 기록 페이지
 - 구매 이력 목록

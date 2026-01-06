@@ -171,24 +171,27 @@ function PricePrediction({ itemId, productName, onClose }: PricePredictionProps)
               </div>
             )}
 
-            {/* 다가오는 세일 */}
+            {/* 예상 세일 일정 */}
             {prediction.upcoming_sales.length > 0 && (
               <div className="sales-section">
-                <h4>다가오는 세일</h4>
+                <h4>예상 세일 일정</h4>
+                <p className="sales-disclaimer">
+                  * 과거 세일 패턴 기반 예상 일정입니다. 실제 할인 여부와 할인율은 쇼핑몰에서 직접 확인하세요.
+                </p>
                 <div className="sales-list">
                   {prediction.upcoming_sales.map((sale, index) => (
                     <div key={index} className={`sale-item ${sale.applicable ? 'applicable' : 'not-applicable'}`}>
                       <div className="sale-header">
                         <span className="sale-name">{sale.name}</span>
                         {sale.days_until === 0 ? (
-                          <span className="sale-badge ongoing">진행 중</span>
+                          <span className="sale-badge ongoing">예상 기간</span>
                         ) : (
                           <span className="sale-badge">D-{sale.days_until}</span>
                         )}
                       </div>
                       <div className="sale-info">
                         <span className="sale-dates">{sale.start_date} ~ {sale.end_date}</span>
-                        <span className="sale-discount">최대 {sale.expected_discount}% 할인</span>
+                        <span className="sale-discount">예상 할인 ~{sale.expected_discount}%</span>
                       </div>
                       {!sale.applicable && (
                         <span className="not-applicable-badge">카테고리 미적용</span>
