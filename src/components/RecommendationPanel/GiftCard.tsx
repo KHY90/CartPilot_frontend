@@ -5,6 +5,8 @@
 import { useState, useEffect } from 'react';
 import { RecommendationCard } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
+import { useCompare } from '../../contexts/CompareContext';
+import { useToast } from '../../contexts/ToastContext';
 import WishlistButton from '../common/WishlistButton';
 import StarRating from '../common/StarRating';
 import { addToWishlist, removeFromWishlist, getWishlist } from '../../services/wishlistApi';
@@ -18,9 +20,30 @@ interface GiftCardProps {
 
 function GiftCard({ card, index }: GiftCardProps) {
   const { isAuthenticated } = useAuth();
+  const { addToCompare, removeFromCompare, isInCompare, isCompareFull } = useCompare();
+  const toast = useToast();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [wishlistItemId, setWishlistItemId] = useState<string | null>(null);
   const [rating, setRating] = useState(0);
+
+  const inCompare = isInCompare(card.product_id);
+
+  const handleCompareToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (inCompare) {
+      removeFromCompare(card.product_id);
+      toast.info('비교 목록에서 제거되었습니다.');
+    } else {
+      if (isCompareFull) {
+        toast.warning('비교는 최대 4개까지 가능합니다.');
+        return;
+      }
+      const added = addToCompare(card);
+      if (added) {
+        toast.success('비교 목록에 추가되었습니다.');
+      }
+    }
+  };
 
   // 초기 상태 로드
   useEffect(() => {
@@ -107,15 +130,27 @@ function GiftCard({ card, index }: GiftCardProps) {
         ) : (
           <div className="gift-card-no-image">이미지 없음</div>
         )}
-        {isAuthenticated && (
-          <div className="gift-card-wishlist">
+        <div className="gift-card-actions">
+          {isAuthenticated && (
             <WishlistButton
               isWishlisted={isWishlisted}
               onToggle={handleWishlistToggle}
               size="medium"
             />
-          </div>
-        )}
+          )}
+          <button
+            className={`compare-btn ${inCompare ? 'active' : ''}`}
+            onClick={handleCompareToggle}
+            title={inCompare ? '비교에서 제거' : '비교 추가'}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="7" height="7" />
+              <rect x="14" y="3" width="7" height="7" />
+              <rect x="14" y="14" width="7" height="7" />
+              <rect x="3" y="14" width="7" height="7" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div className="gift-card-content">
