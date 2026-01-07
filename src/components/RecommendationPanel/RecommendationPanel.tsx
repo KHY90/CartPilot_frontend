@@ -412,13 +412,7 @@ function renderRecommendations(
             {item.products.length > 0 && (
               <div className="trend-products">
                 {item.products.map((p) => (
-                  <a key={p.product_id} href={p.link} target="_blank" rel="noopener noreferrer" className="trend-product">
-                    {p.image && <img src={p.image} alt={p.title} />}
-                    <div className="product-info">
-                      <p className="title">{p.title}</p>
-                      <p className="price">{p.price_display}</p>
-                    </div>
-                  </a>
+                  <TrendProductCard key={p.product_id} card={p} />
                 ))}
               </div>
             )}
@@ -438,17 +432,102 @@ function renderRecommendations(
   );
 }
 
-// BUNDLE 모드용 카드 컴포넌트
+// BUNDLE 모드용 카드 컴포넌트 (비교 기능 포함)
 function BundleProductCard({ card }: { card: RecommendationCard }) {
+  const toast = useToast();
+  const { addToCompare, removeFromCompare, isInCompare, isCompareFull } = useCompare();
+  const inCompare = isInCompare(card.product_id);
+
+  const handleCompareToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (inCompare) {
+      removeFromCompare(card.product_id);
+      toast.info('비교 목록에서 제거되었습니다.');
+    } else {
+      if (isCompareFull) {
+        toast.warning('비교는 최대 4개까지 가능합니다.');
+        return;
+      }
+      const added = addToCompare(card);
+      if (added) {
+        toast.success('비교 목록에 추가되었습니다.');
+      }
+    }
+  };
+
   return (
-    <a href={card.link} target="_blank" rel="noopener noreferrer" className="bundle-product-card">
-      {card.image && <img src={card.image} alt={card.title} />}
-      <div className="product-info">
-        <p className="title">{card.title}</p>
-        <p className="price">{card.price_display}</p>
-        <p className="mall">{card.mall_name}</p>
-      </div>
-    </a>
+    <div className="bundle-product-card-wrapper">
+      <a href={card.link} target="_blank" rel="noopener noreferrer" className="bundle-product-card">
+        {card.image && <img src={card.image} alt={card.title} />}
+        <div className="product-info">
+          <p className="title">{card.title}</p>
+          <p className="price">{card.price_display}</p>
+          <p className="mall">{card.mall_name}</p>
+        </div>
+      </a>
+      <button
+        className={`bundle-compare-btn ${inCompare ? 'active' : ''}`}
+        onClick={handleCompareToggle}
+        title={inCompare ? '비교에서 제거' : '비교 추가'}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <rect x="3" y="3" width="7" height="7" />
+          <rect x="14" y="3" width="7" height="7" />
+          <rect x="14" y="14" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+// TREND 모드용 카드 컴포넌트 (비교 기능 포함)
+function TrendProductCard({ card }: { card: RecommendationCard }) {
+  const toast = useToast();
+  const { addToCompare, removeFromCompare, isInCompare, isCompareFull } = useCompare();
+  const inCompare = isInCompare(card.product_id);
+
+  const handleCompareToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (inCompare) {
+      removeFromCompare(card.product_id);
+      toast.info('비교 목록에서 제거되었습니다.');
+    } else {
+      if (isCompareFull) {
+        toast.warning('비교는 최대 4개까지 가능합니다.');
+        return;
+      }
+      const added = addToCompare(card);
+      if (added) {
+        toast.success('비교 목록에 추가되었습니다.');
+      }
+    }
+  };
+
+  return (
+    <div className="trend-product-wrapper">
+      <a href={card.link} target="_blank" rel="noopener noreferrer" className="trend-product">
+        {card.image && <img src={card.image} alt={card.title} />}
+        <div className="product-info">
+          <p className="title">{card.title}</p>
+          <p className="price">{card.price_display}</p>
+        </div>
+      </a>
+      <button
+        className={`trend-compare-btn ${inCompare ? 'active' : ''}`}
+        onClick={handleCompareToggle}
+        title={inCompare ? '비교에서 제거' : '비교 추가'}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <rect x="3" y="3" width="7" height="7" />
+          <rect x="14" y="3" width="7" height="7" />
+          <rect x="14" y="14" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" />
+        </svg>
+      </button>
+    </div>
   );
 }
 
