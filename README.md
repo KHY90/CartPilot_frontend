@@ -1,5 +1,7 @@
 # CartPilot Frontend
 
+> **[CartPilot 사용법](https://mercury-fowl-399.notion.site/CartPilot-AI-2dee5ada13da80a3a572d7a8ff5c53e6?pvs=74)** - 서비스 이용 가이드
+
 AI 쇼핑 어시스턴트 프론트엔드 - React + TypeScript
 
 ## 서비스 소개
